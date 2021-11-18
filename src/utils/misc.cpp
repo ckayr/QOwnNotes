@@ -381,7 +381,7 @@ bool Utils::Misc::startDetachedProcess(const QString &executablePath,
 #ifdef Q_OS_MAC
     return process.startDetached(
         QStringLiteral("open"),
-        QStringList() << executablePath << "--args" << parameters,
+        QStringList() << "-a" << executablePath << "--args" << parameters,
         workingDirectory);
 #else
     return process.startDetached(executablePath, parameters, workingDirectory);
@@ -431,7 +431,7 @@ QByteArray Utils::Misc::startSynchronousProcess(const QString &executablePath,
     // start executablePath synchronous with parameters
 #ifdef Q_OS_MAC
     process.start("open", QStringList()
-                              << executablePath << "--args" << parameters);
+                  << "-W" << "-a" << executablePath << "--args" << parameters);
 #else
     process.start(executablePath, parameters);
 #endif

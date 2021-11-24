@@ -292,6 +292,7 @@ MainWindow::MainWindow(QWidget *parent)
     initShowHidden();
 
     createSystemTrayIcon();
+
     buildNotesIndexAndLoadNoteDirectoryList(false, false, false);
 
     // setup the update available button
@@ -400,9 +401,6 @@ MainWindow::MainWindow(QWidget *parent)
 
     // load the note folder list in the menu
     this->loadNoteFolderListMenu();
-
-    // update panels sort and order
-    updatePanelsSortOrder();
 
     this->updateService = new UpdateService(this);
     this->updateService->checkForUpdates(this, UpdateService::AppStart);
@@ -568,10 +566,28 @@ MainWindow::MainWindow(QWidget *parent)
 
     automaticScriptUpdateCheck();
 
-    _commandBar = new CommandBar(this);
-
     // trigger cli parameter menu action if there was any set
     triggerStartupMenuAction();
+
+    // We need to wait longer if there is a note tagging hook, because
+    // "directoryWatcherWorkaround" is called in the process, which will mess up
+    // things when done in the background
+    const int delayTime = ScriptingService::instance()->noteTaggingHookExists()
+                              ? 1500 : 10;
+
+    // This is done in the end, because we try to do that asynchronously for performance.
+    // If a note tagging hook exists code will be executed that uses
+    // "directoryWatcherWorkaround", and it's a bad idea do that at some random
+    // time when other code is depending on it turned off!
+    // See: https://github.com/pbek/QOwnNotes/issues/2309
+    #if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
+        QTimer::singleShot(delayTime, this, [this]{
+    #endif
+            // Update panels sort and order
+            updatePanelsSortOrder();
+    #if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
+        });
+    #endif
 }
 
 /**
@@ -658,6 +674,20 @@ void MainWindow::initFakeVim(QOwnNotesMarkdownTextEdit *noteTextEdit) {
     auto handler = new FakeVim::Internal::FakeVimHandler(noteTextEdit, this);
     handler->installEventFilter();
     handler->setupWidget();
+
+    const auto homeDir = QStandardPaths::standardLocations(QStandardPaths::HomeLocation).first();
+    const auto vimRcQONFile = new QFile(QDir(homeDir).filePath(".vimrc.qownnotes"));
+
+    // Try to load .vimrc.qownnotes or .vimrc files
+    if (vimRcQONFile->exists()) {
+        handler->handleCommand(QStringLiteral("source ") + vimRcQONFile->fileName());
+    } else {
+        const auto vimRcFile = new QFile(QDir(homeDir).filePath(".vimrc"));
+
+        if (vimRcFile->exists()) {
+            handler->handleCommand(QStringLiteral("source ") + vimRcFile->fileName());
+        }
+    }
 
     QPointer<FakeVimProxy> proxy = new FakeVimProxy(noteTextEdit, this, handler);
 
@@ -1235,7 +1265,6 @@ void MainWindow::initScriptingEngine() {
     //    QQmlEngine::CppOwnership);
     engine->rootContext()->setContextProperty(QStringLiteral("noteTextEdit"),
                                               ui->noteTextEdit);
-    scriptingService->initComponents();
 }
 
 /**
@@ -1666,7 +1695,14 @@ void MainWindow::initStyling() {
                          .arg(noteTagFrameColorName);
 
     qApp->setStyleSheet(appStyleSheet);
-    Utils::Gui::updateInterfaceFontSize();
+
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
+    QTimer::singleShot(1, this, []{
+#endif
+        Utils::Gui::updateInterfaceFontSize();
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
+    });
+#endif
 
     if (!isInDistractionFreeMode()) {
         ui->noteTextEdit->setPaperMargins(0);
@@ -2208,12 +2244,12 @@ int MainWindow::openNoteDiffDialog(Note changedNote) {
 
 void MainWindow::createSystemTrayIcon() {
     trayIcon = new QSystemTrayIcon(this);
-    trayIcon->setIcon(getSystemTrayIcon());
 
     connect(trayIcon, &QSystemTrayIcon::activated, this,
             &MainWindow::systemTrayIconClicked);
 
     if (showSystemTray) {
+        trayIcon->setIcon(getSystemTrayIcon());
         trayIcon->show();
     }
 }
@@ -2502,8 +2538,16 @@ void MainWindow::readSettings() {
     QSettings settings;
     showSystemTray =
         settings.value(QStringLiteral("ShowSystemTray"), false).toBool();
-    restoreGeometry(
-        settings.value(QStringLiteral("MainWindow/geometry")).toByteArray());
+
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
+    QTimer::singleShot(1, this, [this]{
+#endif
+        restoreGeometry(
+            QSettings().value(QStringLiteral("MainWindow/geometry")).toByteArray());
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
+    });
+#endif
+
     ui->menuBar->restoreGeometry(
         settings.value(QStringLiteral("MainWindow/menuBarGeometry"))
             .toByteArray());
@@ -2606,8 +2650,15 @@ void MainWindow::readSettings() {
 #endif
 
     // load language dicts names into menu
-    _languageGroup = new QActionGroup(ui->menuLanguages);
-    loadDictionaryNames();
+    // Delay loading, loading dictionary names is slow
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
+    QTimer::singleShot(10, this, [this]{
+#endif
+        _languageGroup = new QActionGroup(ui->menuLanguages);
+        loadDictionaryNames();
+#if (QT_VERSION >= QT_VERSION_CHECK(5, 4, 0))
+    });
+#endif
 }
 
 /**
@@ -3295,7 +3346,7 @@ bool MainWindow::buildNotesIndex(int noteSubFolderId, bool forceRebuild) {
     QDir notesDir(notePath);
 
     // only show certain files
-    auto filters = Note::customNoteFileExtensionList(QStringLiteral("*."));
+    auto filters = Note::noteFileExtensionList(QStringLiteral("*."));
 
     // show the newest entry first
     QStringList files = notesDir.entryList(filters, QDir::Files, QDir::Time);
@@ -4001,8 +4052,7 @@ void MainWindow::closeOrphanedTabs() const {
 
 bool MainWindow::jumpToTab(const Note &note) const {
     const int noteId = note.getId();
-    const int tabIndexOfNote = Utils::Gui::getTabWidgetIndexByProperty(
-        ui->noteEditTabWidget, QStringLiteral("note-id"), noteId);
+    const int tabIndexOfNote = getNoteTabIndex(noteId);
 
     if (tabIndexOfNote == -1) {
         return false;
@@ -7983,7 +8033,7 @@ bool MainWindow::isValidMediaFile(QFile *file) {
  * Evaluates if file is a note file
  */
 bool MainWindow::isValidNoteFile(QFile *file) {
-    auto mediaExtensions = Note::customNoteFileExtensionList();
+    auto mediaExtensions = Note::noteFileExtensionList();
     const QFileInfo fileInfo(file->fileName());
     const QString extension = fileInfo.suffix();
     return mediaExtensions.contains(extension, Qt::CaseInsensitive);
@@ -10577,23 +10627,19 @@ void MainWindow::on_noteTreeWidget_currentItemChanged(
 }
 
 void MainWindow::openCurrentNoteInTab() {
-    // first try to jump to the note if there already is a tab for it
-    if (jumpToTab(currentNote)) {
-        return;
-    }
-
     // simulate a newly opened tab by updating the current tab with the last note
     if (_lastNoteId > 0) {
         auto previousNote = Note::fetch(_lastNoteId);
-        if (previousNote.isFetched()) {
+
+        // open the previous note in a new tab only if it is not already open in a tab
+        if (previousNote.isFetched() && getNoteTabIndex(_lastNoteId) == -1) {
             updateCurrentTabData(previousNote);
         }
     }
 
     const QString &noteName = currentNote.getName();
     const int noteId = currentNote.getId();
-    int tabIndex = Utils::Gui::getTabWidgetIndexByProperty(
-        ui->noteEditTabWidget, QStringLiteral("note-id"), noteId);
+    int tabIndex = getNoteTabIndex(noteId);
 
     if (tabIndex == -1) {
         auto *widgetPage = new QWidget();
@@ -10610,6 +10656,11 @@ void MainWindow::openCurrentNoteInTab() {
     if (ui->noteEditTabWidget->widget(0)->property("note-id").isNull()) {
         ui->noteEditTabWidget->removeTab(0);
     }
+}
+
+int MainWindow::getNoteTabIndex(int noteId) const {
+    return Utils::Gui::getTabWidgetIndexByProperty(
+        ui->noteEditTabWidget, QStringLiteral("note-id"), noteId);
 }
 
 void MainWindow::on_noteTreeWidget_customContextMenuRequested(
@@ -12051,9 +12102,10 @@ void MainWindow::on_actionFind_action_triggered() {
         }
     }
 
-    _commandBar->updateBar(actions);
-    _commandBar->show();
-    _commandBar->setFocus();
+    CommandBar commandBar(this);
+    commandBar.updateBar(actions);
+    commandBar.setFocus();
+    commandBar.exec();
 }
 
 /**
@@ -13049,9 +13101,14 @@ void MainWindow::on_actionShow_Hide_application_triggered() {
 
 void MainWindow::on_noteEditTabWidget_currentChanged(int index) {
     QWidget *widget = ui->noteEditTabWidget->currentWidget();
+
+    if (widget == nullptr) {
+        return;
+    }
+
     const int noteId = widget->property("note-id").toInt();
 
-    // close the tab if note doesn't exist any more
+    // close the tab if note doesn't exist anymore
     if (!Note::noteIdExists(noteId)) {
         removeNoteTab(index);
         return;

@@ -328,6 +328,12 @@ SettingsDialog::SettingsDialog(int page, QWidget *parent)
         "https://www.qownnotes.org/getting-started/browser-extension.html"));
     ui->helpTranslateLabel->setText(ui->helpTranslateLabel->text().arg(
         "https://www.qownnotes.org/contributing/translation.html"));
+    ui->commandLineSnippetManagerLabel->setText(ui->commandLineSnippetManagerLabel->text().arg(
+        "https://github.com/qownnotes/qc"));
+    ui->commandSnippetTagLabel->setText(ui->commandSnippetTagLabel->text().arg(
+        "https://www.qownnotes.org/getting-started/command-line-snippet-manager.html"));
+    ui->commandSnippetsNoteNameLabel->hide();
+    ui->commandSnippetsNoteNameLineEdit->hide();
 
 #ifndef Q_OS_LINUX
     ui->systemIconThemeCheckBox->setHidden(true);
@@ -877,14 +883,14 @@ void SettingsDialog::storeSettings() {
                       ui->ignoreSSLErrorsCheckBox->isChecked());
 
     // store the custom note file extensions
-    QStringList customNoteFileExtensionList;
+    QStringList noteFileExtensionList;
     for (int i = 0; i < ui->defaultNoteFileExtensionListWidget->count(); i++) {
         QListWidgetItem *item = ui->defaultNoteFileExtensionListWidget->item(i);
-        customNoteFileExtensionList.append(item->text());
+        noteFileExtensionList.append(item->text());
     }
-    customNoteFileExtensionList.removeDuplicates();
-    settings.setValue(QStringLiteral("customNoteFileExtensionList"),
-                      customNoteFileExtensionList);
+    noteFileExtensionList.removeDuplicates();
+    settings.setValue(QStringLiteral("noteFileExtensionList"),
+                      noteFileExtensionList);
 
     // store the font settings
     storeFontSettings();
@@ -956,6 +962,11 @@ void SettingsDialog::storeSettings() {
     settings.setValue(
         QStringLiteral("webSocketServerService/bookmarksNoteName"),
         ui->bookmarksNoteNameLineEdit->text());
+    settings.setValue(QStringLiteral("webSocketServerService/commandSnippetsTag"),
+                      ui->commandSnippetsTagLineEdit->text());
+    settings.setValue(
+        QStringLiteral("webSocketServerService/bookmarksNoteName"),
+        ui->commandSnippetsNoteNameLineEdit->text());
 
     settings.setValue(QStringLiteral("webAppClientService/serverUrl"),
                       ui->webAppServerUrlLineEdit->text());
@@ -1386,7 +1397,7 @@ void SettingsDialog::readSettings() {
     }
 
     // loads the custom note file extensions
-    QListIterator<QString> itr(Note::customNoteFileExtensionList());
+    QListIterator<QString> itr(Note::noteFileExtensionList());
     while (itr.hasNext()) {
         QString fileExtension = itr.next();
         addCustomNoteFileExtension(fileExtension);
@@ -1467,6 +1478,10 @@ void SettingsDialog::readSettings() {
         WebSocketServerService::getBookmarksTag());
     ui->bookmarksNoteNameLineEdit->setText(
         WebSocketServerService::getBookmarksNoteName());
+    ui->commandSnippetsTagLineEdit->setText(
+        WebSocketServerService::getCommandSnippetsTag());
+    ui->commandSnippetsNoteNameLineEdit->setText(
+        WebSocketServerService::getCommandSnippetsNoteName());
 
     ui->webAppServerUrlLineEdit->setText(WebAppClientService::getServerUrl());
     ui->webAppTokenLineEdit->setText(WebAppClientService::getOrGenerateToken());

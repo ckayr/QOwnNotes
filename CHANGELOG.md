@@ -1,5 +1,35 @@
 # QOwnNotes Changelog
 
+## 21.11.11
+- an issue with no note being set initially after startup when using the note
+  tagging scripting hooks was fixed (for [#2309](https://github.com/pbek/QOwnNotes/issues/2309))
+ 
+## 21.11.10
+- the scripting functions `startSynchronousProcess` and `startDetachedProcess` now
+  have an optional parameter `workingDirectory` (for [#2300](https://github.com/pbek/QOwnNotes/issues/2300))
+  - for more information please take a look at the [scripting documentation](https://www.qownnotes.org/scripting/methods-and-objects.html)
+- when vim-mode is enabled the application will first try to load a `.vimrc.qownnotes`
+  file from your home directory, and if not found it will try to load the `.vimrc` file
+  to add additional configs (for [#2247](https://github.com/pbek/QOwnNotes/issues/2247))
+- fixed a possible crash with the note tag handling API and note tabs (for [#2309](https://github.com/pbek/QOwnNotes/issues/2309))
+- the build on Debian 8 was fixed
+- added more translation (thank you rawfreeamy, marterra, mguerra)
+
+## 21.11.9
+- added support for the [QOwnNotes command-line snippet manager](https://github.com/qownnotes/qc)
+  to execute command snippets stored in notes in QOwnNotes from the command line
+  (for [#2304](https://github.com/pbek/QOwnNotes/issues/2304))
+    - you can use notes with a special tag to store command snippets, which you can
+      execute from the command-line snippet manager
+    - for more information please visit the [Command-line snippet manager](https://www.qownnotes.org/getting-started/command-line-snippet-manager.html)
+- the startup time of the application was improved (for [#2303](https://github.com/pbek/QOwnNotes/pull/2303), thank you @Waqar144) 
+- added more translation (thank you ivonkatran, rawfreeamy, fitoschido, alexeyfdv, marterra)
+
+## 21.11.8
+- fixed a regression from 21.11.7 where notes couldn't be opened in a new tab if
+  there weren't already note tabs open (for [#2298](https://github.com/pbek/QOwnNotes/issues/2298))
+- added more Catalan, Croatian, French translation (thank you mguerra, milotype, chocolatine)
+
 ## 21.11.7
 - it was fixed that when switching between notes in the note tab bar and then opening the current note
   in a new tab again it was possible to get a broken note tab (for [#2298](https://github.com/pbek/QOwnNotes/issues/2298))

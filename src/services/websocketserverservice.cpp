@@ -20,6 +20,7 @@
 
 #include "dialogs/websockettokendialog.h"
 #include "entities/bookmark.h"
+#include "entities/commandsnippet.h"
 #include "entities/notefolder.h"
 #include "entities/tag.h"
 #include "metricsservice.h"
@@ -35,7 +36,7 @@ QT_USE_NAMESPACE
 
 static QString getIdentifier(QWebSocket *peer) {
     if (peer == Q_NULLPTR) {
-        return QString();
+        return {};
     }
 
     return QStringLiteral("%1:%2").arg(peer->peerAddress().toString(),
@@ -83,7 +84,7 @@ void WebSocketServerService::close() {
     }
 }
 
-quint16 WebSocketServerService::getPort() { return m_port; }
+quint16 WebSocketServerService::getPort() const { return m_port; }
 
 quint16 WebSocketServerService::getSettingsPort() {
     QSettings settings;
@@ -96,13 +97,12 @@ quint16 WebSocketServerService::getSettingsPort() {
 }
 
 quint16 WebSocketServerService::getDefaultPort() {
-    quint16 defaultPort = 22222;
-
+    // use port 22223 in debug mode
 #ifndef QT_NO_DEBUG
-    defaultPort = 22223;
+    return 22223;
+#else
+    return 22222;
 #endif
-
-    return defaultPort;
 }
 
 WebSocketServerService::~WebSocketServerService() {
@@ -266,6 +266,16 @@ void WebSocketServerService::processMessage(const QString &message) {
         QString jsonText = getBookmarksJsonText();
         pSender->sendTextMessage(jsonText);
 #endif
+    } else if (type == QLatin1String("getCommandSnippets")) {
+#ifndef INTEGRATION_TESTS
+        QString jsonText = getCommandSnippetsJsonText();
+
+        if (jsonText.isEmpty()) {
+            return;
+        }
+
+        pSender->sendTextMessage(jsonText);
+#endif
     } else {
         pSender->sendTextMessage("Received: " + message);
     }
@@ -285,7 +295,7 @@ QJsonArray WebSocketServerService::createBookmarks(
     }
 
     QString noteText = bookmarksNote.getNoteText().trimmed();
-    const QJsonArray bookmarkList =
+    QJsonArray bookmarkList =
         jsonObject.value(QStringLiteral("data")).toArray();
 
     Q_FOREACH (QJsonValue bookmarkObject, bookmarkList) {
@@ -322,10 +332,10 @@ QJsonArray WebSocketServerService::createBookmarks(
     return bookmarkList;
 }
 
-QString WebSocketServerService::getBookmarksJsonText() const {
+QString WebSocketServerService::getBookmarksJsonText() {
     MainWindow *mainWindow = MainWindow::instance();
     if (mainWindow == Q_NULLPTR) {
-        return QString();
+        return {};
     }
 
     Tag tag = Tag::fetchByName(getBookmarksTag());
@@ -352,6 +362,36 @@ QString WebSocketServerService::getBookmarksJsonText() const {
     return jsonText;
 }
 
+QString WebSocketServerService::getCommandSnippetsJsonText() {
+    MainWindow *mainWindow = MainWindow::instance();
+    if (mainWindow == Q_NULLPTR) {
+        return {};
+    }
+
+    Tag tag = Tag::fetchByName(getCommandSnippetsTag());
+    const QVector<Note> noteList = tag.fetchAllLinkedNotes();
+    QVector<CommandSnippet> commandSnippets;
+
+    // get all command snippet from notes tagged with the command snippets tag
+    for (const Note &note : noteList) {
+        QVector<CommandSnippet> noteCommandSnippets = note.getParsedCommandSnippets();
+
+        // merge command snippet lists
+        CommandSnippet::mergeListInList(noteCommandSnippets, commandSnippets);
+    }
+
+    // extract command snippets from the current note
+    QVector<CommandSnippet> currentNoteCommandSnippets = CommandSnippet::parseCommandSnippets(
+        mainWindow->activeNoteTextEdit()->toPlainText(), true);
+
+    // merge command snippet lists
+    CommandSnippet::mergeListInList(currentNoteCommandSnippets, commandSnippets);
+
+    QString jsonText = CommandSnippet::commandSnippetsWebServiceJsonText(commandSnippets);
+
+    return jsonText;
+}
+
 /**
  * Returns the json text after switching note folders
  *
@@ -359,7 +399,7 @@ QString WebSocketServerService::getBookmarksJsonText() const {
  * @return
  */
 QString WebSocketServerService::getNoteFolderSwitchedJsonText(
-    bool switched) const {
+    bool switched) {
     QJsonObject object;
     object.insert(QStringLiteral("type"),
                   QJsonValue::fromVariant("switchedNoteFolder"));
@@ -374,7 +414,7 @@ QString WebSocketServerService::getNoteFolderSwitchedJsonText(
  *
  * @return
  */
-QString WebSocketServerService::getTokenQueryJsonText() const {
+QString WebSocketServerService::getTokenQueryJsonText() {
     QJsonObject object;
     object.insert(QStringLiteral("type"),
                   QJsonValue::fromVariant("tokenQuery"));
@@ -396,23 +436,31 @@ void WebSocketServerService::socketDisconnected() {
 }
 
 QString WebSocketServerService::getBookmarksTag() {
-    QSettings settings;
-    QString bookmarksTag =
-        settings
+    return QSettings()
             .value(QStringLiteral("webSocketServerService/bookmarksTag"),
                    "bookmarks")
             .toString();
-    return bookmarksTag;
 }
 
 QString WebSocketServerService::getBookmarksNoteName() {
-    QSettings settings;
-    QString bookmarksNoteName =
-        settings
+    return QSettings()
             .value(QStringLiteral("webSocketServerService/bookmarksNoteName"),
                    "Bookmarks")
             .toString();
-    return bookmarksNoteName;
+}
+
+QString WebSocketServerService::getCommandSnippetsTag() {
+    return QSettings()
+            .value(QStringLiteral("webSocketServerService/commandSnippetsTag"),
+                   "commands")
+            .toString();
+}
+
+QString WebSocketServerService::getCommandSnippetsNoteName() {
+    return QSettings()
+            .value(QStringLiteral("webSocketServerService/commandSnippetsNoteName"),
+                   "Commands")
+            .toString();
 }
 
 QString WebSocketServerService::flashMessageJsonText(const QString &message) {

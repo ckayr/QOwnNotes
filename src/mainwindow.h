@@ -784,7 +784,6 @@ private:
     bool _scriptUpdateFound = false;
     bool _isMaximizedBeforeFullScreen = false;
     bool _isMinimizedBeforeFullScreen = false;
-    CommandBar* _commandBar;
 
     void createSystemTrayIcon();
 
@@ -1123,6 +1122,6 @@ private:
     void closeOrphanedTabs() const;
     void removeNoteTab(int index) const;
     void automaticScriptUpdateCheck();
-
     void updateJumpToActionsAvailability();
+    int getNoteTabIndex(int noteId) const;
 };

@@ -1,14 +1,14 @@
 # Fordítás
 
-Hogyan segíthetek a QOwnNotes fordításában?
-
 Köszönjük a segítségét!
 
-## Csatlakozzon hozzánk a Crowdin-on a QOwnNotes fordításához
+Hogyan segíthetek a QOwnNotes fordításában?
+
+## Csatlakozzon hozzánk Crowdin webalkalmazáson a QOwnNotes fordításához
 
 ![crowdin](/img/crowdin.png)
 
-A **Crowdin** egy népszerű Localization Management Platform mobilalkalmazásokhoz, webes, asztali szoftverekhez és a kapcsolódó eszközökhöz.
+A **Crowdin** egy népszerű Lokalizációkezelési felületen a mobilalkalmazásokhoz, webes, asztali szoftverekhez és kapcsolódó eszközökhez.
 
 Regisztrálhat a [Crowdin](https://crowdin.com/project/qownnotes/invite) oldalon, és **lefordíthatja** **QOwnNotes** az Ön nyelvére egyszerű eszközökkel.
 
@@ -16,58 +16,86 @@ Regisztrálhat a [Crowdin](https://crowdin.com/project/qownnotes/invite) oldalon
 
 Csak [küldjön üzenetet a projekt tulajdonosának a Crowdin](https://crowdin.com/profile/pbek) on vagy [GitHub kérdésként](https://github.com/pbek/QOwnNotes/issues), ha új nyelvre szeretné fordítani a QOwnNotes programot.
 
-Ha új nyelvet szeretne hozzáadni a meglévő fordításokhoz, azonnal megteheti.
+Ha fordítást szeretne hozzáadni **meglévő fordításokhoz**, a fenti linken keresztül azonnal megteheti.
 
 ## Lektorálás
 
-Ha nagyon jól beszél egy már lefordított nyelvet, amely még nem volt lektorálva, akkor hálásak vagyunk a segítségért, hogy a QOwnNotes élményt megbízhatóbbá és kényelmesebbé tegye mások számára is.
+Ha Ön egy már lefordított, még le nem olvasott nyelv kiváló vagy akár anyanyelvi beszélője, hálásan köszönjük, ha a nem jóváhagyott fordítások ellenőrzésével és szükség esetén javításával segíti a QOwnNotes élményét megbízhatóbbá és kényelmesebbé tenni. Kérjen engedélyt a tulajdonostól, hogy lektorálhasson a saját nyelvén.
 
 Kattintson ide, hogy lássa, az Ön nyelve a lefordítottak között van-e!
 
 [QOwnNotes a Crowdin-on](https://translate.qownnotes.org/)
 
-Miután [felvette a kapcsolatot a projekt tulajdonosával a Crowdin-on](https://crowdin.com/profile/pbek) és megkapta az engedélyt az Ön nyelvén történő lektorálásra, startolhat!
+Miután [felvette a kapcsolatot a projekt tulajdonosával a Crowdinon](https://crowdin.com/profile/pbek), és engedélyt kapott az Ön nyelvén történő lektorálásra, készen áll!
 
-Kérjük, vegyen figyelembe néhány dolgot a projekt során:
+## Általános tippek
 
-1) A maximális pontosság a legjobb felhasználói élményt nyújtja.
+Kérjük, vegyen figyelembe néhány szükséges feltételt a projekt során.
 
-2) Kreatívan válasszon stílust, amint a fordítása megfelel a legegyszerűbb és azonos fordítás követelményének.
+### Pontosság
 
-3) Méltányoljuk, ha a fordítás hasonlóan tömör és ugyanazokat a formaságokat követi, mint az eredeti.
+Kérjük, lokalizálja a lehető legnagyobb pontossággal, miközben ügyel a célnyelv folyékony használatára.
 
-4) Mindig ugyanazokat a fordításokat használjuk azonos forráskifejezéseknél:
+### Precizitás
 
-   Ha a `trashed notes` németül `törölt fájlok`, akkor mindig ezt a kifejezést használja lefordítani. Kivételt jelentene az, amikor nyelvtanilag kötelezõen használ egy alternatívát, de kezelje egyszerűen.
+A célnak pontosan kell képviselnie a forrást, a karakterlánc bármely részének kihagyása vagy kiegészítése nélkül.
 
-   ![screenshot](/img/crowdin/screenshot-7.png)
+### Kontextus
 
-   Az összes azonos kifejezés megtalálása érdekében keressen rá Crowdinra, és tekintse meg egy kifejezés összes előfordulását
+Ha több kontextusra vagy segítségre van szüksége egy bizonyos karakterlánchoz, és történetesen tud egy további nyelven is, megváltoztathatja a nyelvet, és megnézheti, hogy más fordítók mit hoztak létre a szegmensből. De nyugodtan hagyjon üzenetet, és kérjen pontosítást az oldal jobb oldalán.
 
-   Szabványosítson minden előfordulást a lehető legjobban, hogy az azonos kifejezések azonos fordításokat kapjanak.
+### Gyakran használt kulcsfogalmak
 
-   A `jegyzet` szó mindig, feltétlenül csak egy azonos fordítást eredményezzen.
+A gyakran használt kulcsfogalmaknál ellenőrizni és ugyanazokat a fordításokat kell használni, például a "jegyzet" kifejezést mindig azonosan szükséges fordítani.
 
-5) Többes szám esetén kérjük, adja hozzá a megfelelő fordítást a megfelelő blokkba.
+Ha a `trashed notes` magyarul `törölt fájlok`, akkor mindig így fordítsa! Kivétel, ha nyelvtanilag kötelezvén használ egy alternatívát.
 
-   ![screenshot](/img/crowdin/screenshot-4.png)
+![screenshot](/img/crowdin/screenshot-7.png)
 
-6) A `%1` címkéket szóköz nélkül kell írni, vagy beillesztheti az eredeti címkéit, vagy beírhatja a fordításába.
+In order to find all the identical expressions, search Crowdin to see if all the occurrences of a term indeed have the same translation. You may suggest a better translation and vote on the others.
 
-   ![screenshot](/img/crowdin/screenshot-1.png)
+Lokalizálja a kifejezések összes előfordulását olyan egyformán, amennyire csak lehet.
 
-   ![screenshot](/img/crowdin/screenshot-5.png)
+A `jegyzet` szó mindig, feltétlenül csak egy azonos fordítást eredményezzen.
 
-   ![screenshot](/img/crowdin/screenshot-3.png)
+### Többes számú alakok
 
-7) Használja a `&` elemet minden olyan betű előtt, amelyet gyorsbillentyűként kell használni, ugyanaz lehet, mint az eredetiben, de nem feltétlenesen.
+Többes szám esetén adja hozzá a megfelelő fordítást a megfelelő blokkhoz.
 
-   ![screenshot](/img/crowdin/screenshot-4.png)
+![screenshot](/img/crowdin/screenshot-4.png)
 
-## A fordítás és a lektorálás szórakoztató!
+### Változók
 
-Meg kell birkóznia a szoftver nyelvével, és sokat megtudhat a kifejezésekről és a projekt mélyebb rétegeiről.
+A `%1` változókat szóköz nélkül kell írni, az RTL nyelveken vagy beillesztheti a változókat az eredetiből, vagy beírhatja a fordításba.
 
-Ha így készen áll arra, hogy segítsen nyelvének fordításának korrektúrájában, [Amy](https://crowdin.com/profile/rawfreeamy), aki húsz éve fordító és szerkesztő, üdvözli Önt egy 30 perces edzésen a fordítás és lektorálás gyakorlatában, ahol olyan kérdéseket tehet fel neki, amelyekben még bizonytalan. Váljon segítségével képesre, a legtöbbet kihozni a fordítás és a lektorálás élményéböl.
+![screenshot](/img/crowdin/screenshot-1.png)
 
-Nagyon köszönjük a segítségét!
+![screenshot](/img/crowdin/screenshot-5.png)
+
+![screenshot](/img/crowdin/screenshot-3.png)
+
+### Hozzáférési kulcsok
+
+Használja a `&` jelet minden olyan betű előtt, amelyet a parancsikonban kell használni. Ugyanaz lehet, mint az eredetiben, de nem kötelező.
+
+![screenshot](/img/crowdin/screenshot-4.png)
+
+### Conteneurs personnalisés
+
+Az olyan karakterláncok, mint az `::: tip`, `::: warning` and `::: info` a dokumentációban, az [custom containers](https://vuepress.vuejs.org/guide/markdown.html#custom-containers) jelölői a VuePressben, és nem szabad lefordítani őket.
+
+### Más karakterláncok, amelyeket nem kell lefordítani
+
+Néhány szegmens, amelyet nem fordítunk le a Dokumentációban:
+
+- Soha ne fordítson le kódokat vagy linkeket, a címkéket úgy kell hagyni, ahogy vannak (és szóközök nélkül, ahogy egyes MT-k ezt teszik, ezeket törölni kell)
+- Nem fordítjuk le a dátumot és az időt (hagyja üresen)
+- És nem fordítunk hivatkozásokat (amit a QON számos nyelven kapott), így egyszerűen kihagyhatja őket
+
+## A fordítás és a lektorálás izgalmas lehet!
+
+Foglalkozni fog ennek a szoftvernek a nyelvével, új kifejezéseket tanul, és sok bennfentes információt kap a projektről.
+
+Ha készen áll arra, hogy segítsen nyelve fordításának lektorálásában, [Amy Fabijenna](https://crowdin.com/profile/rawfreeamy) üdvözli Önt egy rövid eligazításon a fordítás és a lektorálás gyakorlatáról. Bármit kérdezhet tőle, ami segít abban, hogy kellemesen végezze a munkát.
+
+Nagyon köszönjük a segítségét! 🙂

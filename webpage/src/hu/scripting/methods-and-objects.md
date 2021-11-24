@@ -7,18 +7,19 @@ Külső program indítása a háttérben
 ### Módszerhívás és paraméterek
 ```cpp
 /**
-  * QML-csomagoló egy leválasztott folyamat elindításához
-  *
-  * @param végrehajthatóPath a futtatható fájl elérési útja
-  * @param paraméterek a paraméterláncok listája
-  * @param callbackIdentifier az onDetachedProcessCallback () függvényben használandó azonosító (opcionális)
-  * @param callbackParameter egy további paraméter a hurkokhoz vagy hasonlókhoz (opcionális)
-  * @param processA visszahívás használata esetén a folyamatba írt adatok (opcionális)
-  * @retret true a sikerre, hamis egyébként
-  */
-bool startDetachedProcess (QString végrehajtható útvonal, QStringList paraméterek,
-                             QString callbackIdentifier, QVariant callbackParameter,
-                             QByteArray processData);
+ * QML wrapper to start a detached process
+ *
+ * @param executablePath the path of the executable
+ * @param parameters a list of parameter strings
+ * @param callbackIdentifier an identifier to be used in the onDetachedProcessCallback() function (optional)
+ * @param callbackParameter an additional parameter for loops or the like (optional)
+ * @param processData data written to the process if the callback is used (optional)
+ * @param workingDirectory the working directory to execute the process in (optional, only works without callback)
+ * @return true on success, false otherwise
+ */
+bool startDetachedProcess(QString executablePath, QStringList parameters,
+                            QString callbackIdentifier, QVariant callbackParameter,
+                            QByteArray processData, QString workingDirectory);
 ```
 
 ### Példa
@@ -54,21 +55,22 @@ Indítson egy külső programot, és várja meg a kimenetet
 ### Módszerhívás és paraméterek
 ```cpp
 /**
-  * QML-csomagoló a szinkron folyamat elindításához
-  *
-  * @param végrehajthatóPath a futtatható fájl elérési útja
-  * @param paraméterek a paraméterláncok listája
-  * @param adatok a folyamatba írandó adatok (nem kötelező)
-  * @ visszaadja a folyamat által visszaadott szöveget
-QByteArray startSynchronousProcess(QString executablePath, QStringList parameters, QByteArray data);
+ * QML wrapper to start a synchronous process
+ *
+ * @param executablePath the path of the executable
+ * @param parameters a list of parameter strings
+ * @param data the data that will be written to the process (optional)
+ * @param workingDirectory the working directory to execute the process in (optional)
+ * @return the text that was returned by the process
+QByteArray startSynchronousProcess(QString executablePath, QStringList parameters, QByteArray data, QString workingDirectory);
 ```
 
 ### Példa
 ```js
-var result = script.startSynchronousProcess("/path/to/my/program", ["my parameter"], "data");
+var result = script.startSynchronousProcess("/path/to/my/program", ["my parameter"], "data", "/path/to/execute/in");
 ```
 
-You may want to take a look at the example [encryption-keybase.qml](https://github.com/pbek/QOwnNotes/blob/develop/docs/scripting/examples/encryption-keybase.qml).
+Érdemes megnézni a példát [encryption-keybase.qml](https://github.com/pbek/QOwnNotes/blob/develop/docs/scripting/examples/encryption-keybase.qml).
 
 Az aktuális jegyzet mappa elérési útjának lekérése
 -------------------------------------------
@@ -88,7 +90,7 @@ QString currentNoteFolderPath();
 var path = script.currentNoteFolderPath();
 ```
 
-You may want to take a look at the example [absolute-media-links.qml](https://github.com/pbek/QOwnNotes/blob/develop/docs/scripting/examples/absolute-media-links.qml).
+Érdemes megnézni a példát [abszolút-media-links.qml](https://github.com/pbek/QOwnNotes/blob/develop/docs/scripting/examples/absolute-media-links.qml).
 
 Az aktuális jegyzet megszerzése
 ------------------------
@@ -108,7 +110,7 @@ NoteApi currentNote ();
 var note = script.currentNote();
 ```
 
-You may want to take a look at the example [custom-actions.qml](https://github.com/pbek/QOwnNotes/blob/develop/docs/scripting/examples/custom-actions.qml).
+Érdemes megnéznie az [custom-actions.qml](https://github.com/pbek/QOwnNotes/blob/develop/docs/scripting/examples/custom-actions.qml) példát.
 
 Naplózás a napló widgetbe
 -------------------------
@@ -201,10 +203,10 @@ Mellékletfájl beszúrása a mellékletek mappájába
 
 ### Módszerhívás és paraméterek
 ```cpp
- * QML wrapper to insert an attachment file into the `attachments` folder and
- * returning the attachment url or the markdown text of the attachment
- * relative to the current note
- *
+ * QML-burkoló egy csatolmányfájl beszúrásához a "mellékletek" mappába, és
+  * a melléklet url-jének vagy a melléklet leíró szövegének visszaadása
+  * az aktuális hanghoz képest
+  *
  * @param {QString} attachmentFilePath
  * @param {QString} fileName to use in the markdown
  * @param {bool} returnUrlOnly if true only the attachment url will be returned
@@ -614,9 +616,9 @@ Szerezze be a szövegmutató aktuális helyzetét a jegyzetszöveg szerkesztés�
 ### Módszerhívás és paraméterek
 ```cpp
 /**
- * Returns the current position of the text cursor in the note text edit
- * 0 would be the beginning of the note
- */
+  * Visszaadja a kurzor aktuális helyzetét a jegyzet szövegszerkesztésében
+  * 0 lenne a hang eleje
+  */
 int ScriptingService::noteTextEditCursorPosition();
 ```
 

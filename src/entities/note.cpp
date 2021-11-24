@@ -24,6 +24,7 @@
 
 #include "api/noteapi.h"
 #include "entities/bookmark.h"
+#include "entities/commandsnippet.h"
 #include "helpers/codetohtmlconverter.h"
 
 #include <botanwrapper.h>
@@ -1253,14 +1254,18 @@ QString Note::defaultNoteFileExtension() {
 }
 
 /**
- * Returns the a list of the custom note file extensions
+ * Returns the a list of all note file extensions
  */
-QStringList Note::customNoteFileExtensionList(const QString &prefix) {
+QStringList Note::noteFileExtensionList(const QString &prefix) {
     const QSettings settings;
     QStringList list =
-        settings.value(QStringLiteral("customNoteFileExtensionList"))
+        settings.value(QStringLiteral("noteFileExtensionList"))
             .toStringList();
     list.removeDuplicates();
+
+    if (list.isEmpty()) {
+        list << defaultNoteFileExtension();
+    }
 
     if (!prefix.isEmpty()) {
         list.replaceInStrings(QRegularExpression(QStringLiteral("^")), prefix);
@@ -3362,8 +3367,7 @@ bool Note::fileUrlIsNoteInCurrentNoteFolder(const QUrl &url) {
         return false;
     }
 
-    QListIterator<QString> itr(customNoteFileExtensionList(
-        QStringLiteral(".")));
+    QListIterator<QString> itr(noteFileExtensionList(QStringLiteral(".")));
 
     while (itr.hasNext()) {
         const auto fileExtension = itr.next();
@@ -4083,6 +4087,17 @@ QVector<Bookmark> Note::getParsedBookmarks() const {
     const QString text =
         _decryptedNoteText.isEmpty() ? _noteText : _decryptedNoteText;
     return Bookmark::parseBookmarks(text);
+}
+
+/**
+ * Returns the parsed command snippets of the note
+ *
+ * @return
+ */
+QVector<CommandSnippet> Note::getParsedCommandSnippets() const {
+    const QString text =
+        _decryptedNoteText.isEmpty() ? _noteText : _decryptedNoteText;
+    return CommandSnippet::parseCommandSnippets(text);
 }
 
 void Note::resetNoteTextHtmlConversionHash() {

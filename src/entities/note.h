@@ -6,6 +6,7 @@
 #include <QDateTime>
 
 class Bookmark;
+class CommandSnippet;
 class NoteSubFolder;
 class QRegularExpression;
 class QFile;
@@ -95,7 +96,7 @@ class Note {
 
     static QString defaultNoteFileExtension();
 
-    static QStringList customNoteFileExtensionList(
+    static QStringList noteFileExtensionList(
         const QString &prefix = QString());
 
     static QString getFullFilePathForFile(const QString &fileName);
@@ -321,6 +322,8 @@ class Note {
     static QString extendedCleanupFileName(QString name);
 
     QVector<Bookmark> getParsedBookmarks() const;
+
+    QVector<CommandSnippet> getParsedCommandSnippets() const;
 
     QString getParsedBookmarksWebServiceJsonText() const;
 

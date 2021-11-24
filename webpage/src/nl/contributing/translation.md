@@ -1,8 +1,8 @@
 # Vertaling
 
-Hoe kan ik helpen bij het vertalen van QOwnNotes?
-
 Bedankt voor je hulp!
+
+Hoe kan ik helpen bij het vertalen van QOwnNotes?
 
 ## Ga met ons mee op Crowdin om QOwnNotes te vertalen
 
@@ -16,58 +16,86 @@ U kunt zich aanmelden bij [Crowdin](https://crowdin.com/project/qownnotes/invite
 
 [Stuur de projecteigenaar gewoon een bericht op Crowdin](https://crowdin.com/profile/pbek) of als een [GitHub-probleem](https://github.com/pbek/QOwnNotes/issues) als je QOwnNotes naar een nieuwe taal wilt vertalen.
 
-Als u nieuwe vertalingen aan bestaande talen wilt toevoegen, kunt u dit meteen doen.
+Als u nieuwe vertalingen aan **bestaande talen** wilt toevoegen, kunt u dit meteen doen.
 
 ## Proeflezen
 
-Als u een zeer goede spreker bent van een reeds vertaalde taal die nog niet is nagelezen, dan zijn wij u dankbaar voor uw hulp om de QOwnNotes-ervaring betrouwbaarder en gemakkelijker te maken.
+Als u een uitstekende of zelfs moedertaalspreker bent van een reeds vertaalde taal die nog niet is nagelezen, stellen we het op prijs als u helpt om de QOwnNotes-ervaring betrouwbaarder en gemakkelijker te maken door niet-goedgekeurde vertalingen te controleren en indien nodig te corrigeren. U moet de eigenaar om toestemming vragen om proeflezer voor uw taal te zijn.
 
 Klik hier om te zien of uw taal een van de vertaalde talen is!
 
 [QOwnNotes op Crowdin](https://translate.qownnotes.org/)
 
-Zodra u [contact heeft opgenomen met de projecteigenaar op Crowdin](https://crowdin.com/profile/pbek) en toestemming heeft gekregen om in uw taal te proeflezen, bent u klaar om te gaan!
+Zodra je [contact hebt opgenomen met de projecteigenaar op Crowdin](https://crowdin.com/profile/pbek) en toestemming hebt gekregen om in jouw taal te proeflezen, ben je klaar om te gaan!
 
-Overweeg een paar dingen terwijl u aan het project werkt:
+## Allgemeine Hinweise
 
-1) Maximale nauwkeurigheid zorgt voor de beste gebruikerservaring.
+Overweeg een paar dingen terwijl u aan het project werkt.
 
-2) Maak creatief gebruik van uw stijlkeuze zodra uw vertaling voldeed aan de vereiste om de meest identieke match de van de brontext te erschappen!.
+### Nauwkeurigheid
 
-3) Het is logisch dat de vertaling even beknopt is en dezelfde formaliteiten volgt als het origineel.
+Lokaliseer met de grootst mogelijke nauwkeurigheid en zorg voor vloeiendheid in uw doeltaal.
 
-4) Laten we altijd dezelfde vertalingen gebruiken voor identieke bronuitdrukkingen:
+### Precisie
 
-   Als `weggegooide notities` ` gelöschte Dateien` in het Duits is, zou je het altijd met deze uitdrukking vertalen. Uitzondering zou zijn wanneer u grammaticaal een alternatief moet gebruiken, maar het simpel houdt.
+Het doel moet de bron exact weergeven en zonder weglatingen of toevoegingen van enig deel van de tekenreeks.
 
-   ![screenshot](/img/crowdin/screenshot-7.png)
+### Context
 
-   Om alle identieke uitdrukkingen te vinden, zoekt u in Crowdin en ziet u alle keren dat een term voorkomt
+Als je meer context nodig hebt, of hulp bij een bepaalde string, en je kent een andere taal, dan kun je de taal veranderen en zien wat andere vertalers van het segment hebben gemaakt. Maar laat gerust een bericht achter en vraag om opheldering aan de rechterkant van de pagina.
 
-   Standaardiseer alle exemplaren zo goed mogelijk, zodat identieke termen identieke vertalingen krijgen.
+### Veelgebruikte sleuteltermen
 
-   `Opmerking` zou beslist altijd maar één vertaling moeten hebben.
+Het is noodzakelijk om dezelfde vertalingen te controleren en te gebruiken voor de veelgebruikte sleuteltermen, bijvoorbeeld "note" moet altijd op dezelfde manier worden vertaald.
 
-5) Voeg voor meervoud de juiste vertaling toe, elk in het overeenkomstige blok.
+Als `weggegooide notities` ` verwijderde bestanden` in het Nederlands is vertaald, zou je het altijd identiek vertalen. Uitzondering zou zijn wanneer u grammaticaal een alternatief moet gebruiken, maar het simpel houdt.
 
-   ![screenshot](/img/crowdin/screenshot-4.png)
+![screenshot](/img/crowdin/screenshot-7.png)
 
-6) De `%1` -tags moeten zonder spatie worden geschreven, in RTL-talen kunt u de tags van het origineel invoegen of ze in uw vertaling schrijven.
+Om alle identieke uitdrukkingen te vinden, zoekt u in Crowdin of alle exemplaren van een term inderdaad dezelfde vertaling hebben. U kunt een betere vertaling voorstellen en op de andere stemmen.
 
-   ![screenshot](/img/crowdin/screenshot-1.png)
+Lokaliseer alle voorvallen zo identiek mogelijk.
 
-   ![screenshot](/img/crowdin/screenshot-5.png)
+`Opmerking` zou beslist altijd maar één vertaling moeten hebben.
 
-   ![screenshot](/img/crowdin/screenshot-3.png)
+### Meervoudsvormen
 
-7) Gebruik `&` voor elke letter die in een snelkoppeling moet worden gebruikt, kan hetzelfde zijn als in het origineel, maar hoeft niet.
+Voeg voor meervoud de juiste vertaling toe, elk in het overeenkomstige blok.
 
-   ![screenshot](/img/crowdin/screenshot-4.png)
+![screenshot](/img/crowdin/screenshot-4.png)
 
-## Vertalen en proeflezen zijn leuk!
+### Variabelen
 
-Je krijgt te maken met de taal die deze software spreekt en leert veel over termen en de binnenkant van het project.
+De variabelen `%1` moeten zonder spatie worden geschreven, in RTL-talen kunt u de variabelen uit het origineel invoegen of ze in uw vertaling schrijven.
 
-Als je dus klaar bent om te helpen bij het proeflezen van de vertaling van je taal, [Fabijenna](https://crowdin.com/profile/rawfreeamy), verwelkomt je als vertaler en redacteur van twintig jaar je voor een 30 minuten durende coaching in de wetenschap en de praktijk van vertalen en proeflezen, waar je haar vragen kunt stellen waar je misschien niet zeker van was en het meeste uit je proefleeservaring kunt halen.
+![screenshot](/img/crowdin/screenshot-1.png)
 
-Heel erg bedankt voor je hulp!
+![screenshot](/img/crowdin/screenshot-5.png)
+
+![screenshot](/img/crowdin/screenshot-3.png)
+
+### Toegangssleutels
+
+Gebruik `&` voor elke letter die in een snelkoppeling moet worden gebruikt, kan hetzelfde zijn als in het origineel, maar hoeft niet.
+
+![screenshot](/img/crowdin/screenshot-4.png)
+
+### Aangepaste containers
+
+Tekenreeksen zoals `::: tip`, `::: warning` en `::: info` in de documentatie zijn markeringen voor [custom containers](https://vuepress.vuejs.org/guide/markdown.html#custom-containers) in VuePress en mogen niet worden vertaald.
+
+### Andere tekenreeksen die niet moeten worden vertaald
+
+Sommige segmenten vertalen we niet in de documentatie:
+
+- Vertaal nooit codes of links, tags moeten blijven zoals ze zijn (en zonder toegevoegde spaties, zoals sommige MT dat doen, die moeten worden verwijderd)
+- Wij vertalen datum en tijd niet (leeg laten)
+- En we vertalen ook geen referenties (die QON in tal van talen heeft), dus je kunt ze gewoon overslaan
+
+## Vertalen en proeflezen kan spannend zijn!
+
+Je zult omgaan met de taal van deze software, nieuwe termen leren en veel inside-informatie over het project ontvangen.
+
+Als je dus klaar bent om te helpen bij het proeflezen van de vertaling van jouw taal, heet [Amy Fabijenna](https://crowdin.com/profile/rawfreeamy) je welkom op een korte briefing in de praktijk van vertalen en proeflezen. Je kunt haar alles vragen wat je helpt om met plezier een bijdrage te leveren.
+
+Heel erg bedankt voor je hulp! 🙂

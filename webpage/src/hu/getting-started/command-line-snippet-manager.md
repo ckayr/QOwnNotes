@@ -1,6 +1,6 @@
 # Command-line Snippet Manager
 
-Download the [QOwnNotes Command-line Snippet Manager](https://github.com/qownnotes/qc/releases) to **execute command snippets stored in notes** in QOwnNotes from the command line.
+A [QOwnNotes Command-line Snippet Manager](https://github.com/qownnotes/qc) segítségével **futtathatja a jegyzetekben tárolt parancsrészleteket** a QOwnNotes alkalmazásban a parancssorból.
 
 ![qc](/img/qc.png)
 
@@ -8,7 +8,33 @@ Download the [QOwnNotes Command-line Snippet Manager](https://github.com/qownnot
 
 ![commands](/img/commands.png)
 
-## Configuration
+## Telepítés
+
+Keresse fel a [legfrissebb kiadás oldalát](https://github.com/qownnotes/qc/releases/latest) és töltse le a kívánt verziót.
+
+::: tip
+Ha telepítve van a [jq](https://stedolan.github.io/jq), ezt a kódrészletet használhatja például a legújabb Linux AMD64 AppImage letöltéséhez és telepítéséhez a `/usr/local/bin/qc` címre:
+
+```bash
+curl https://api.github.com/repos/qownnotes/qc/releases/latest | \
+jq '.assets[] | select(.browser_download_url | endswith("_linux_amd64.tar.gz")) | .browser_download_url' | \
+xargs curl -Lo /tmp/qc.tar.gz && \
+tar xfz /tmp/qc.tar.gz -C /tmp && \
+rm /tmp/qc.tar.gz && \
+sudo mv /tmp/qc /usr/local/bin/qc && \
+/usr/local/bin/qc --version
+```
+:::
+
+## Függőségek
+
+Az [fzf](https://github.com/junegunn/fzf) (fuzzy search) vagy a [peco](https://github.com/peco/peco) (régebbi, de nagyobb valószínűséggel alapértelmezés szerint telepítve) telepítése szükséges a parancsok kereséséhez a parancssorban.
+
+::: tip
+Alapértelmezés szerint az `fzf` kifejezést használja a kereséshez, de használhatja a `peco`-t, ha beállítja a `qc configure` paranccsal.
+:::
+
+## Beállítás
 
 ![socket-server-token](/img/socket-server-token.png)
 
@@ -19,8 +45,8 @@ Ezután meg kell mutatnia a biztonsági tokent (3), és ki kell másolnia (4).
 Most nyissa meg a kódrészletkezelő konfigurációs fájlját a következővel:
 
 ```bash
-# Configure the snippet manager
-qc configure
+# Konfigurálja a kódrészletkezelőt
+qc konfigurálása
 ```
 
 És helyezze a biztonsági tokent a `token` attribútumba:
@@ -31,22 +57,44 @@ token = "yourtokenhere"
 ```
 
 ::: tip
-A QOwnNotes beállításaiban azt is beállíthatja, hogy milyen jegyzetcímkét használjon a parancsok kereséséhez a jegyzetekben. Alapértelmezés szerint a `command` címke használatos.
+A QOwnNotes beállításaiban azt is beállíthatja, hogy milyen jegyzetcímkét használjon a parancsok kereséséhez a jegyzetekben. Alapértelmezés szerint a `commands` címke használatos.
 :::
 
 ## A parancsrészletek szintaxisa
 
-A parancsrészletek tárolásához használhat soron belüli kódblokkokkal rendelkező rendezetlen listákat. Minden `command` címkével rendelkező jegyzetben a rendszer parancsrészleteket keres.
+You can use **unordered lists with in-line code blocks** to store command snippets. Minden `commands` címkét tartalmazó jegyzetben a rendszer parancsrészleteket keres.
 
-Ha a soron belüli kódblokk elé egy `cmd:` karakterláncot ad hozzá, a parancs a jegyzetcímkéktől függetlenül az aktuális jegyzetben is megtalálható lesz.
+If you add a `cmd:` before the in-line code block, the command will also be found in the **current note** regardless of note tags.
 
 ```markdown
-- `echo I am a command` I am a description #tag1 #tag2 #tag3
-* `echo I am also a command` I am a description #tag3 #tag4 #tag5
-- cmd: `echo I will be found in the current note` This command will be found in the current note regardless of note tags
+- `visszhang Én vagyok a parancs` Leírás vagyok #tag1 #tag2 #tag3
+* `visszhang Én is parancs vagyok` Leírás vagyok #tag3 #tag4 #tag5
+- cmd: `echo I megtalálható lesz az aktuális jegyzetben` Ez a parancs megtalálható az aktuális jegyzetben, függetlenül a jegyzetcímkéktől
 ```
 
-## Usage
+**`bash` or `shell` code blocks**, preceded by a heading 2 or higher as a description, can also be used for command snippets. Tags are also supported if they are between the heading and the code block.
+
+    ## Do this with a "bash" code block
+
+    - this text will be ignored text
+    - but tags can be used: #tag1 #tag2
+
+    ```bash
+    echo do this
+    echo do that
+    ```
+
+
+    ## Do something else with a "sh" code block
+
+    ```sh
+    echo do something else
+    echo do something other
+    ```
+
+Above example will result in two command snippets, the first one with the two tags `tag1` and `tag2`.
+
+## Használat
 
 ```bash
 # Search and execute command snippets
@@ -56,4 +104,30 @@ qc exec
 ```bash
 # Search and print command snippets
 qc search
+```
+
+## Konfiguráció
+
+Run `qc configure`.
+
+```toml
+[General]
+  editor = "vim"            # your favorite text editor
+  column = 40               # column size for list command
+  selectcmd = "fzf"         # selector command for edit command (fzf or peco)
+  sortby = ""               # specify how snippets get sorted (recency (default), -recency, description, -description, command, -command, output, -output)
+
+[QOwnNotes]
+  token = "MvTagHXF"        # your QOwnNotes API token
+  websocket_port = 22222    # websocket port in QOwnNotes
+```
+
+## Shell completion
+
+You can generate shell completion code for your shell with `qc completion <shell>`.
+
+For example for the Fish shell you can use:
+
+```bash
+qc completion fish > ~/.config/fish/completions/qc.fish
 ```

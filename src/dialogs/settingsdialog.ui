@@ -1949,7 +1949,7 @@
                 <item row="0" column="1">
                  <widget class="QLineEdit" name="calDavServerUrlEdit">
                   <property name="sizePolicy">
-                   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
@@ -1971,7 +1971,7 @@
                   </property>
                  </widget>
                 </item>
-                <item row="2" column="0">
+                <item row="1" column="0">
                  <widget class="QLabel" name="label_15">
                   <property name="text">
                    <string>Username:</string>
@@ -1981,10 +1981,10 @@
                   </property>
                  </widget>
                 </item>
-                <item row="2" column="1">
+                <item row="1" column="1">
                  <widget class="QLineEdit" name="calDavUsernameEdit">
                   <property name="sizePolicy">
-                   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
@@ -2006,7 +2006,7 @@
                   </property>
                  </widget>
                 </item>
-                <item row="3" column="0">
+                <item row="2" column="0">
                  <widget class="QLabel" name="label_16">
                   <property name="text">
                    <string>Password:</string>
@@ -2016,10 +2016,10 @@
                   </property>
                  </widget>
                 </item>
-                <item row="3" column="1">
+                <item row="2" column="1">
                  <widget class="QLineEdit" name="calDavPasswordEdit">
                   <property name="sizePolicy">
-                   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
                     <horstretch>0</horstretch>
                     <verstretch>0</verstretch>
                    </sizepolicy>
@@ -2158,7 +2158,7 @@
                <property name="sizeHint" stdset="0">
                 <size>
                  <width>20</width>
-                 <height>40</height>
+                 <height>5</height>
                 </size>
                </property>
               </spacer>
@@ -3548,8 +3548,8 @@
                           <rect>
                            <x>0</x>
                            <y>0</y>
-                           <width>430</width>
-                           <height>538</height>
+                           <width>360</width>
+                           <height>532</height>
                           </rect>
                          </property>
                          <layout class="QGridLayout" name="gridLayout_55">
@@ -4217,6 +4217,9 @@ Just test yourself if you get sync conflicts and set a higher value if so.</stri
                  <layout class="QVBoxLayout" name="verticalLayout_21">
                   <item>
                    <widget class="QPushButton" name="resetMessageBoxesButton">
+                    <property name="toolTip">
+                     <string>Forget all &quot;Don't ask again&quot; choices in message boxes</string>
+                    </property>
                     <property name="text">
                      <string>Reset message boxes</string>
                     </property>
@@ -5187,6 +5190,9 @@ p, li { white-space: pre-wrap; }
                <layout class="QGridLayout" name="gridLayout_35">
                 <item row="0" column="1" colspan="2">
                  <widget class="QCheckBox" name="markdownHighlightingCheckBox">
+                  <property name="toolTip">
+                   <string>Note that disabling this will also disable the navigation panel!</string>
+                  </property>
                   <property name="text">
                    <string>Enable markdown highlighting</string>
                   </property>
@@ -5811,6 +5817,13 @@ git config --global user.name &quot;Your name&quot;</string>
                  <widget class="QCheckBox" name="navigationPanelHideSearchCheckBox">
                   <property name="text">
                    <string>Hide navigation item search bar</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QCheckBox" name="navigationPanelAutoSelectCheckBox">
+                  <property name="text">
+                   <string>Auto-select items in navigation panel when changing cursor position</string>
                   </property>
                  </widget>
                 </item>

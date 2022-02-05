@@ -191,7 +191,7 @@ cd Notes
 ```
 ~~~
 
-Currently supported languages (and code block identifiers) are:
+Currently, supported languages (and code block identifiers) are:
 
 * BASh scripting, `bash`
 * C, `c`
@@ -229,7 +229,7 @@ Currently supported languages (and code block identifiers) are:
 
 Tables aren't part of the core Markdown spec, but the QOwnNotes preview supports them. 
 
-```markdown
+~~~markdown
 Colons can be used to align columns.
 
 | Tables        | Are           | Cool  |
@@ -246,10 +246,10 @@ You can also use inline Markdown.
 | --- | --- | --- |
 | *Still* | `renders` | **nicely** |
 | 1 | 2 | 3 |
-```
+~~~
 
 ::: tip
-Press <kbd>Alt + Shift + T</kbd> to activate a dialog that can help you creating tables.
+Press <kbd>Alt + Shift + T</kbd> to activate a dialog that can help you to create tables.
 You can even import CSV files in that dialog.
 
 Use <kbd>Ctrl + Space</kbd> inside a markdown table to automatically format it.
@@ -296,9 +296,13 @@ ___
 
 ## Line breaks
 
-- **Two newlines** will get you a **new paragraph**.
-- **One newline** will get you a **new line in the same paragraph**.
-- To have a **line break without a paragraph**, you will need to use **two trailing spaces**.
+- You can break a paragraph into more than a single line for easier editing, they still render as a single paragraph with no breaks.
+- You can force a line break inside a paragraph by ending a line with two spaces.
+- You can make a separate paragraph by delimiting it by empty lines.
+
+::: tip
+You can enter two spaces and a newline with <kbd>⇧ Shift</kbd> + <kbd>Return</kbd>.
+:::
 
 ```markdown
 Here's a line for us to start with.

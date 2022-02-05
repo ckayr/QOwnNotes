@@ -26,7 +26,7 @@ Bookmark::Bookmark(QString url, QString name, QStringList tagList,
     this->name = std::move(name);
     this->tags = std::move(tagList);
     this->description = std::move(description);
-};
+}
 
 QJsonObject Bookmark::jsonObject() const {
     QJsonObject bookmarkObject;
@@ -38,7 +38,7 @@ QJsonObject Bookmark::jsonObject() const {
     bookmarkObject.insert(QStringLiteral("description"),
                           QJsonValue::fromVariant(description));
     return bookmarkObject;
-};
+}
 
 QDebug operator<<(QDebug dbg, const Bookmark &bookmark) {
     dbg.nospace() << "Bookmark: <name>" << bookmark.name << " <url>"
@@ -65,7 +65,7 @@ QVector<Bookmark> Bookmark::parseBookmarks(const QString &text,
     // parse bookmark links like `- [name](http://link) #tag1 #tag2 the
     // description text` with optional tags and description
     i = QRegularExpression(
-            QStringLiteral(R"([-*] \[(.+?)\]\(([\w-]+://.+?)\)(.*)$)"),
+            QStringLiteral(R"([-*]\s+\[(.+?)\]\(([\w-]+://.+?)\)(.*)$)"),
             QRegularExpression::MultilineOption)
             .globalMatch(text);
 

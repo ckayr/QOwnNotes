@@ -8,16 +8,39 @@ include_directories(libraries/sonnet/src/core)
 #some hunspell settings for windows
 include(libraries/sonnet/src/plugins/hunspell/hunspell/CMakeLists.txt)
 
+add_library(md4c
+    libraries/md4c/md4c/md4c.c
+    libraries/md4c/md2html/render_html.c
+    libraries/md4c/md2html/entity.c
+)
 
 add_executable(QOwnNotes "")
 
 set_target_properties(QOwnNotes PROPERTIES
-    CXX_STANDARD 11
+    CXX_STANDARD 17
     CXX_STANDARD_REQUIRED ON
     AUTOMOC ON
     AUTOUIC ON
     AUTORCC ON
 )
+
+if (UNIX)
+    if (CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+        target_compile_options(QOwnNotes PRIVATE
+            -Wall -Wextra -pedantic -Wno-gnu-zero-variadic-macro-arguments -Wno-error=deprecated-declarations
+        )
+    else()
+        target_compile_options(QOwnNotes PRIVATE
+            -Wall -Wextra -pedantic
+        )
+    endif()
+
+    # enable werror on linux
+    if (NOT APPLE)
+        message("Werror enabled on linux")
+        target_compile_options(QOwnNotes PRIVATE -Werror)
+    endif()
+endif()
 
 target_include_directories(QOwnNotes PRIVATE
     ${CMAKE_CURRENT_LIST_DIR}
@@ -39,6 +62,12 @@ if(MSVC)
 endif()
 add_subdirectory(libraries/fakevim)
 add_subdirectory(libraries/diff_match_patch)
+
+option(USE_QLITE_HTML "Build using QLiteHtml for preview" OFF)
+if (USE_QLITEHTML)
+    add_definitions(-DUSE_QLITEHTML=1)
+    add_subdirectory(libraries/qlitehtml)
+endif()
 
 
 find_package(Qt5 COMPONENTS REQUIRED
@@ -138,8 +167,8 @@ set(SOURCE_FILES
     dialogs/storedimagesdialog.cpp
     dialogs/storedimagesdialog.h
     dialogs/storedimagesdialog.ui
-        dialogs/storedattachmentsdialog.cpp
-        dialogs/storedattachmentsdialog.h
+    dialogs/storedattachmentsdialog.cpp
+    dialogs/storedattachmentsdialog.h
     dialogs/storedattachmentsdialog.ui
     dialogs/scriptrepositorydialog.cpp
     dialogs/scriptrepositorydialog.h
@@ -212,9 +241,6 @@ set(SOURCE_FILES
     api/tagapi.h
     api/scriptapi.cpp
     api/scriptapi.h
-    libraries/md4c/md4c/md4c.c
-    libraries/md4c/md2html/render_html.c
-    libraries/md4c/md2html/entity.c
     libraries/qmarkdowntextedit/linenumberarea.h
     libraries/qmarkdowntextedit/qownlanguagedata.cpp
     libraries/qmarkdowntextedit/qownlanguagedata.h
@@ -330,6 +356,10 @@ set(SOURCE_FILES
     widgets/layoutwidget.ui
     widgets/todoitemtreewidget.cpp
     widgets/todoitemtreewidget.h
+    widgets/htmlpreviewwidget.h
+    widgets/htmlpreviewwidget.cpp
+    widgets/notesubfoldertree.cpp
+    widgets/notesubfoldertree.h
     utils/misc.cpp
     utils/misc.h
     utils/git.cpp
@@ -338,6 +368,8 @@ set(SOURCE_FILES
     utils/gui.h
     utils/schema.cpp
     utils/schema.h
+    utils/urlhandler.h
+    utils/urlhandler.cpp
     build_number.h
     main.cpp
     mainwindow.cpp
@@ -527,11 +559,18 @@ target_link_libraries(QOwnNotes PRIVATE
     Botan::Botan
     fakevim
     Google::DiffMatchPatch
+    md4c
 )
 if(UNIX)
     target_link_libraries(QOwnNotes PRIVATE
         Qt5::X11Extras
         ${X11_LIBRARIES}
+    )
+endif()
+
+if (USE_QLITEHTML)
+    target_link_libraries(QOwnNotes PRIVATE
+        qlitehtml::qlitehtml
     )
 endif()
 

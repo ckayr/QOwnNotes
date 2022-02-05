@@ -35,3 +35,13 @@ Puoi installarlo con:
 ```shell
 choco install qownnotes
 ```
+
+## Scoop
+
+In [Scoop](https://scoop.sh/) c'è un [pacchetto di QOwnNotes gestito dalla comunità](https://github.com/ScoopInstaller/Extras/blob/master/bucket/qownnotes.json). Se aggiungi il bucket Extras puoi usare QOwnNotes in modalità portabile.
+
+```shell
+scoop bucket add extras
+scoop update
+scoop install qownnotes
+```

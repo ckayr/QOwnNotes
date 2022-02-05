@@ -179,10 +179,16 @@ void OwnCloudService::readSettings(int cloudConnectionId) {
     CloudConnection todoCalendarCloudConnection =
         CloudConnection::currentTodoCalendarCloudConnection();
 
+    QString todoCalendarAccountId = todoCalendarCloudConnection.getAccountId();
+
+    if (todoCalendarAccountId.isEmpty()) {
+        todoCalendarAccountId = todoCalendarCloudConnection.getUsername();
+    }
+
     QString calendarPath = QStringLiteral("/remote.php/") %
                            calendarBackendString %
                            QStringLiteral("/calendars/") %
-                           todoCalendarCloudConnection.getUsername();
+                           todoCalendarAccountId;
     todoCalendarServerUrl =
         todoCalendarCloudConnection.getServerUrl().isEmpty()
             ? QString()
@@ -342,11 +348,7 @@ void OwnCloudService::slotReplyFinished(QNetworkReply *reply) {
             QList<CalDAVCalendarData> calendarDataList =
                 parseCalendarData(data);
 
-            //#if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 0))
             //            qInfo() << "calendarDataList: " << calendarDataList;
-            //#else
-            //            qDebug() << "calendarDataList: " << calendarDataList;
-            //#endif
 
             if (settingsDialog != Q_NULLPTR) {
                 settingsDialog->refreshTodoCalendarList(calendarDataList);
@@ -428,6 +430,9 @@ void OwnCloudService::slotReplyFinished(QNetworkReply *reply) {
             handleImportBookmarksReply(data);
         } else if (url.toString() == serverUrl) {
             qDebug() << "Reply from main server url";
+            if (!settingsDialog) {
+                return;
+            }
 
             if (!data.isEmpty()) {
                 settingsDialog->setOKLabelData(1, tr("ok"),
@@ -468,6 +473,9 @@ void OwnCloudService::checkAppInfo(QNetworkReply *reply) {
                                 .toString();
 
 #ifndef INTEGRATION_TESTS
+    if (!settingsDialog) {
+        return;
+    }
     // reset to "unknown" in case we can't test if versions
     // and trash app are enabled
     settingsDialog->setOKLabelData(6, tr("unknown"),
@@ -848,8 +856,8 @@ void OwnCloudService::setPermissionsOnSharedNote(const Note &note,
     QUrl url(serverUrl % sharePath % QStringLiteral("/") %
              QString::number(note.getShareId()) %
              QStringLiteral("?format=xml"));
-    QString path = NoteFolder::currentRemotePath() +
-                   note.relativeNoteFilePath(QStringLiteral("/"));
+//    QString path = NoteFolder::currentRemotePath() +
+//                   note.relativeNoteFilePath(QStringLiteral("/"));
 
     QUrlQuery params;
     params.addQueryItem(QStringLiteral("permissions"),
@@ -1142,6 +1150,12 @@ void OwnCloudService::loadTrash(MainWindow *mainWindow) {
 }
 
 void OwnCloudService::addAuthHeader(QNetworkRequest *r) {
+    addGenericAuthHeader(r, userName, password);
+}
+
+void OwnCloudService::addGenericAuthHeader(QNetworkRequest *r,
+                                           const QString &userName,
+                                           const QString &password) {
     if (r) {
         QString concatenated = userName % QStringLiteral(":") % password;
         QByteArray data = concatenated.toLocal8Bit().toBase64();
@@ -1722,7 +1736,12 @@ void OwnCloudService::handleUpdateNoteShareReply(const QString &urlPart,
         return;
     }
 
-#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+    Q_UNUSED(urlPart)
+    qWarning() << Q_FUNC_INFO << "not implemented for qt6";
+    return;
+#else
+
     //    qDebug() << __func__ << " - 'data': " << data;
 
     QRegularExpression re(QRegularExpression::escape(sharePath) %
@@ -2000,7 +2019,9 @@ void OwnCloudService::loadDirectory(QString &data) {
     }
 
 #ifndef INTEGRATION_TESTS
-    settingsDialog->setNoteFolderRemotePathList(pathList);
+    if (settingsDialog) {
+        settingsDialog->setNoteFolderRemotePathList(pathList);
+    }
 #endif
 }
 
@@ -2062,8 +2083,10 @@ bool OwnCloudService::updateICSDataOfCalendarItem(CalendarItem *calItem) {
     // 5 sec timeout for the request
     timer.start(5000);
 
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+#if QT_VERSION < QT_VERSION_CHECK(5, 9, 0)
     r.setAttribute(QNetworkRequest::FollowRedirectsAttribute, true);
+#else
+    r.setAttribute(QNetworkRequest::RedirectPolicyAttribute, true);
 #endif
 
     QNetworkReply *reply = manager->get(r);
@@ -2179,9 +2202,11 @@ QByteArray OwnCloudService::downloadNextcloudPreviewImage(const QString &path) {
     QNetworkRequest networkRequest = QNetworkRequest(url);
     addAuthHeader(&networkRequest);
 
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+#if QT_VERSION < QT_VERSION_CHECK(5, 9, 0)
     networkRequest.setAttribute(QNetworkRequest::FollowRedirectsAttribute,
                                 true);
+#else
+    networkRequest.setAttribute(QNetworkRequest::RedirectPolicyAttribute, true);
 #endif
 
     QByteArray data;
@@ -2287,4 +2312,84 @@ bool OwnCloudService::initiateLoginFlowV2(const QString &serverUrl, QJsonObject 
     pollData = jsonObject.value(QStringLiteral("poll")).toObject();
 
     return true;
+}
+
+/**
+ * Fetches the Nextcloud Account Id (to be used as WebDav username) as part of the login flow v2
+ * https://docs.nextcloud.com/server/latest/developer_manual/client_apis/LoginFlow/index.html#obtaining-the-login-credentials
+ *
+ * @param serverUrl
+ * @param userName
+ * @param password
+ * @return
+ */
+QString OwnCloudService::fetchNextcloudAccountId(const QString &serverUrl,
+                                                      const QString &userName,
+                                                      const QString &password) {
+
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+    Q_UNUSED(serverUrl)
+    Q_UNUSED(userName)
+    Q_UNUSED(password)
+    qWarning() << Q_FUNC_INFO << "not implemented for qt6";
+    return {};
+#else
+    auto *manager = new QNetworkAccessManager();
+    QEventLoop loop;
+    QTimer timer;
+    timer.setSingleShot(true);
+    QObject::connect(&timer, SIGNAL(timeout()), &loop, SLOT(quit()));
+    QObject::connect(manager, SIGNAL(finished(QNetworkReply *)), &loop,
+                     SLOT(quit()));
+
+    // 5 sec timeout for the request
+    timer.start(5000);
+
+    QUrl url(serverUrl % QStringLiteral("/ocs/v1.php/cloud/user"));
+
+//    qDebug() << __func__ << " - 'url': " << url;
+//    qDebug() << __func__ << " - 'userName': " << userName;
+//    qDebug() << __func__ << " - 'password': " << password;
+
+    QNetworkRequest networkRequest = QNetworkRequest(url);
+    addGenericAuthHeader(&networkRequest, userName, password);
+
+#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
+    // try to ensure the network is accessible
+    manager->setNetworkAccessible(QNetworkAccessManager::Accessible);
+#endif
+
+    QNetworkReply *reply = manager->get(networkRequest);
+    ignoreSslErrorsIfAllowed(reply);
+    loop.exec();
+
+    // if we didn't get a timeout let us return the content
+    if (timer.isActive()) {
+        if (reply->error() != QNetworkReply::NoError) {
+            qDebug() << __func__ << " - 'reply->error()': " << reply->error();
+            qDebug() << __func__ << " - 'reply->errorString()': "
+                     << reply->errorString();
+            qDebug() << __func__ << " - 'reply->readAll()': "
+                     << reply->readAll();
+
+            return {};
+        }
+
+        QString data = QString(reply->readAll());
+//        qDebug() << __func__ << " - 'data': " << data;
+
+        QXmlQuery query;
+        query.setFocus(data);
+        query.setQuery(QStringLiteral("ocs/data/id/text()"));
+        QString id;
+        query.evaluateTo(&id);
+
+        return id.trimmed();
+    }
+
+    reply->deleteLater();
+    delete (manager);
+
+    return {};
+#endif
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QObject>
+#include <QPointer>
 
 #define QOWNNOTESAPI_MIN_VERSION "0.4.2"
 
@@ -96,6 +97,8 @@ class OwnCloudService : public QObject {
 
     static bool initiateLoginFlowV2(const QString &serverUrl, QJsonObject &pollData);
 
+    static QString fetchNextcloudAccountId(const QString &serverUrl, const QString &userName, const QString &password);
+
    private:
     QString serverUrl;
     QString todoCalendarServerUrl;
@@ -123,13 +126,15 @@ class OwnCloudService : public QObject {
     QString sharePath;
     QString bookmarkPath;
     QString trashDeletePath;
-    SettingsDialog *settingsDialog;
+    QPointer<SettingsDialog> settingsDialog;
     TodoDialog *todoDialog;
     QString calendarName;
 
     void checkAppInfo(QNetworkReply *reply);
 
     void readSettings(int cloudConnectionId = -1);
+
+    static void addGenericAuthHeader(QNetworkRequest *r, const QString &userName, const QString &password);
 
     void addAuthHeader(QNetworkRequest *r);
 

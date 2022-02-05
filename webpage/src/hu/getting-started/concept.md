@@ -38,8 +38,8 @@ graph TB
 ## QOwnNotes
 
 - A QOwnNotes **jegyzeteket** tárol a **jegyzetek mappájában markdown fájlként**
-- Kommunikál a Nextcloud / ownCloud szerverével, **hogy nyilvánosan osztassa meg a jegyzeteket** másokkal
-- A **jegyzetelőzményeket és a kukákat is elérheti **a Nextcloud / ownCloud szerveren a [QOwnNotesApi Nextcloud alkalmazáson keresztül](#qownnotesapi-nextcloud-app)
+- Kommunikál a Nextcloud / ownCloud szerverével, **hogy nyilvánosan oszhassa meg a jegyzeteket** másokkal
+- A **jegyzetelőzményeket és a kukákat is elérheti** a Nextcloud / ownCloud szerveren a [QOwnNotesApi Nextcloud alkalmazáson keresztül](#qownnotesapi-nextcloud-app)
 - A Nextcloud / ownCloud szerveren szereplő Todo listák a QOwnNotes szolgáltatásból érhetők el
 - **A QOwnNotes nem szinkronizálja a jegyzeteit** és a média / melléklet fájlokat!
     - A fájlszinkronizálás összetett erőfeszítés, máris vannak nagyszerű fájlszinkronizálási megoldások (lásd: [Nextcloud asztali szinkronizálási kliens](#nextcloud-desktop-sync-client))
@@ -48,7 +48,7 @@ graph TB
 ## Markdown jegyzetfájlok
 
 - Az összes jegyzeted és média- / mellékletfájlod **a te tulajdonodban** van!
-- Az Ön jegyzeteit **egyszerű szöveges Markdown fájlokként** tárolják az asztali számítógépen
+- Jegyzeteit **egyszerű szöveges Markdown-fájlokként** tárolja az asztali számítógépe
 - A QOwnNotes mellett tetszőleges szövegszerkesztőt használhat a jegyzetfájlok megtekintésére vagy szerkesztésére
 - **A jegyzetek szinkronizálása** más eszközökkel (asztali és mobil) a [Nextcloud](https://nextcloud.com/) vagy a [ownCloud](https://owncloud.org/) szinkronizálási klienssel a szerverhez
 

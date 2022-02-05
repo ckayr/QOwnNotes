@@ -12,7 +12,7 @@ Wie kann ich bei der Übersetzung von QOwnNotes helfen?
 
 Sie können sich unter [Crowdin](https://crowdin.com/project/qownnotes/invite) und anmelden und **QOwnNotes** mit einfachen Tools in Ihre Sprache **übersetzen**.
 
-**[QOwnNotes auf Crowdin](screenshot)**
+**[QOwnNotes auf Crowdin](https://crowdin.com/project/qownnotes/invite)**
 
 [Schreiben Sie dem Projektinhaber einfach eine Nachricht auf Crowdin](https://crowdin.com/profile/pbek) oder als [GitHub-Ausgabe](https://github.com/pbek/QOwnNotes/issues), wenn Sie QOwnNotes in eine neue Sprache übersetzen möchten.
 
@@ -24,7 +24,7 @@ Wenn Sie ein ausgezeichneter oder sogar Muttersprachler einer bereits übersetzt
 
 Klicken Sie hier um zu sehen, ob Ihre Sprache zu den bereits Übersetzten gehört!
 
-[QOwnNotes auf Crowdin](screenshot)
+[QOwnNotes auf Crowdin](https://translate.qownnotes.org/)
 
 Sobald Sie den [Projektinhaber auf Crowdin kontaktiert haben](https://crowdin.com/profile/pbek) und die Erlaubnis zum Korrekturlesen in Ihrer Sprache erhalten haben, können Sie loslegen!
 
@@ -88,9 +88,9 @@ Strings wie `::: tip`, `::: warning` und `::: info` in der Dokumentation sind Ma
 
 Einige Segmente, die wir in der Dokumentation nicht übersetzen:
 
-- Übersetzen Sie niemals Codes oder Links, Tags müssen so belassen werden, wie sie sind (und ohne zusätzliche Leerzeichen, wie das manche MT tun, müssen diese gelöscht werden)
+- Übersetzen Sie niemals Codes oder Links; Tags müssen so belassen werden, wie sie sind und ohne zusätzliche Leerzeichen, (wie das manche maschinellen Übersetzungen tun, dann müssen diese Zeichen händisch entfernt werden)
 - Wir übersetzen Datum und Uhrzeit nicht (leer lassen)
-- Und wir übersetzen auch keine Referenzen (die QON in zahlreichen Sprachen bekommen hat), also kannst du sie einfach überspringen
+- Und wir übersetzen auch keine Referenzen (die QON in zahlreichen Sprachen bekommen hat), Sie können dieses Kapitel einfach überspringen.
 
 ## Übersetzen und Korrekturlesen kann spannend sein!
 

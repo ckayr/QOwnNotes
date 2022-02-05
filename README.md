@@ -159,6 +159,18 @@ qmake
 make
 ```
 
+### Building QOwnNotes For Development
+
+If you are going to work with the code, then you can do the following instead of the above:
+
+```shell
+cd src
+qmake CONFIG+=DEV_MODE CONFIG+=debug ..
+make -j4
+```
+
+The `DEV_MODE` variable enabled higher warning levels + precompiled headers.
+
 Please feel free to contribute source code to this project, make suggestions or
 report troubles on the [QOwnNotes issues page](https://github.com/pbek/QOwnNotes/issues)!
 
@@ -167,7 +179,7 @@ You can also visit [QOwnNotes on GitHub](https://github.com/pbek/QOwnNotes).
 ## Minimum software requirements
 
 - A desktop operating system, that supports [Qt](http://www.qt.io/)
-- Qt 5.3+
+- Qt 5.5+
 - gcc 4.8+
 
 ## Disclaimer

@@ -5,7 +5,7 @@
 <!-- <Content :page-key="getPageKey($site.pages, '/installation/ubuntu.md')" /> -->
 
 
-## Sur toutes les versions openSUSE
+## Sur toutes les versions d'openSUSE
 
 Vous pouvez installer QOwnNotes à l'aide de l'outil [OBS Package Installer](https://github.com/openSUSE/opi).
 
@@ -30,18 +30,6 @@ Vérifiez également que le dépôt choisi est le `home:pbek:QOwnNotes` officiel
 ::: tip
 Vous devez activer l'option de conserver le référentiel après l'installation pour obtenir les mises à jour.
 :::
-
-## openSUSE 13.2
-
-Exécutez les commandes shell suivantes en tant que root pour ajouter le dépôt et installer QOwnNotes à partir de là.
-
-```bash
-zypper addrepo -f http://download.opensuse.org/repositories/home:/pbek:/QOwnNotes/openSUSE_13.2/home:pbek:QOwnNotes.repo
-zypper refresh
-zypper install qownnotes
-```
-
-[Téléchargement direct](https://download.opensuse.org/repositories/home:/pbek:/QOwnNotes/openSUSE_13.2)
 
 ## openSUSE Leap 15.4
 
@@ -91,7 +79,7 @@ zypper install qownnotes
 
 ## openSUSE Leap 15.0
 
-Exécutez les commandes shell suivantes en tant que root pour ajouter le dépôt et installer QOwnNotes à partir de là.
+Exécutez les commandes shell suivantes en tant que root pour ajouter le dépôt puis installer QOwnNotes.
 
 ```bash
 zypper addrepo -f http://download.opensuse.org/repositories/home:/pbek:/QOwnNotes/openSUSE_Leap_15.0/home:pbek:QOwnNotes.repo
@@ -110,7 +98,7 @@ su -
 rpm --import http://download.opensuse.org/repositories/home:/pbek:/QOwnNotes/openSUSE_Leap_42.3/repodata/repomd.xml.key
 ```
 
-Exécutez les commandes shell suivantes en tant que root pour ajouter le dépôt et installer QOwnNotes à partir de là.
+Exécutez les commandes shell suivantes en tant que root pour ajouter le dépôt puis installer QOwnNotes.
 
 ```bash
 zypper addrepo -f http://download.opensuse.org/repositories/home:/pbek:/QOwnNotes/openSUSE_Leap_42.3/home:pbek:QOwnNotes.repo
@@ -129,7 +117,7 @@ su -
 rpm --import http://download.opensuse.org/repositories/home:/pbek:/QOwnNotes/openSUSE_Leap_42.2/repodata/repomd.xml.key
 ```
 
-Exécutez les commandes shell suivantes en tant que root pour ajouter le dépôt et installer QOwnNotes à partir de là.
+Exécutez les commandes shell suivantes en tant que root pour ajouter le dépôt puis installer QOwnNotes.
 
 ```bash
 zypper addrepo -f http://download.opensuse.org/repositories/home:/pbek:/QOwnNotes/openSUSE_Leap_42.2/home:pbek:QOwnNotes.repo
@@ -138,25 +126,6 @@ zypper install qownnotes
 ```
 
 [Téléchargement direct](https://download.opensuse.org/repositories/home:/pbek:/QOwnNotes/openSUSE_Leap_42.2)
-
-## openSUSE Leap 42.1
-
-Exécutez les commandes shell suivantes en tant que root pour approuver le dépôt.
-
-```bash
-su -
-rpm --import http://download.opensuse.org/repositories/home:/pbek:/QOwnNotes/openSUSE_Leap_42.1/repodata/repomd.xml.key
-```
-
-Exécutez les commandes shell suivantes en tant que root pour ajouter le dépôt et installer QOwnNotes à partir de là.
-
-```bash
-zypper addrepo -f http://download.opensuse.org/repositories/home:/pbek:/QOwnNotes/openSUSE_Leap_42.1/home:pbek:QOwnNotes.repo
-zypper refresh
-zypper install qownnotes
-```
-
-[Téléchargement direct](https://download.opensuse.org/repositories/home:/pbek:/QOwnNotes/openSUSE_Leap_42.1)
 
 ## openSUSE Tumbleweed
 
@@ -173,7 +142,7 @@ zypper install qownnotes
 
 ## SLE 12 SP3 Backports
 
-Exécutez les commandes shell suivantes en tant que root pour ajouter le dépôt et installer QOwnNotes à partir de là.
+Exécutez les commandes shell suivantes en tant que root pour ajouter le dépôt puis installer QOwnNotes.
 
 ```bash
 zypper addrepo -f http://download.opensuse.org/repositories/home:/pbek:/QOwnNotes/SLE_12_SP3_Backports/home:pbek:QOwnNotes.repo
@@ -185,7 +154,7 @@ zypper install qownnotes
 
 ## SLE 15
 
-Exécutez les commandes shell suivantes en tant que root pour ajouter le dépôt et installer QOwnNotes à partir de là.
+Exécutez les commandes shell suivantes en tant que root pour ajouter le dépôt puis installer QOwnNotes.
 
 ```bash
 zypper addrepo -f http://download.opensuse.org/repositories/home:/pbek:/QOwnNotes/SLE_15/home:pbek:QOwnNotes.repo

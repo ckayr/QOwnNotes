@@ -3,7 +3,6 @@
 #include <utils/gui.h>
 #include <utils/misc.h>
 #include <utils/schema.h>
-#include <widgets/logwidget.h>
 
 #include <QApplication>
 #include <QFileDialog>
@@ -105,6 +104,11 @@ bool mainStartupMisc(const QStringList &arguments) {
             "application and environment in GitHub Markdown and exits "
             "the application."));
     parser.addOption(dumpSettingsOption);
+    const QCommandLineOption versionOption(
+        QStringLiteral("version"),
+        QCoreApplication::translate(
+            "main", "Prints out the version number."));
+    parser.addOption(versionOption);
     const QCommandLineOption allowMultipleInstancesOption(
         QStringLiteral("allow-multiple-instances"),
         QCoreApplication::translate(
@@ -349,12 +353,10 @@ void tempLogMessageOutput(QtMsgType type, const QMessageLogContext &context,
             }
             Utils::Misc::logToFileIfAllowed(type, msg);
             break;
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 0))
         case QtInfoMsg:
             fprintf(stderr, "%s", messageWithType.toLocal8Bit().constData());
             Utils::Misc::logToFileIfAllowed(type, message);
             break;
-#endif
         case QtWarningMsg:
         case QtCriticalMsg:
         case QtFatalMsg:
@@ -378,16 +380,19 @@ int main(int argc, char *argv[]) {
     // register NoteHistoryItem, so we can store it to the settings
     // we need to do that before we are accessing QSettings or the
     // NoteHistoryItem instances in the settings will get destroyed
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     qRegisterMetaTypeStreamOperators<NoteHistoryItem>("NoteHistoryItem");
+#endif
     qRegisterMetaType<NoteHistoryItem>("NoteHistoryItem");
 
     // temporary log output until LogWidget::logMessageOutput takes over
     qInstallMessageHandler(tempLogMessageOutput);
 
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0))
+    // enabled by default on Qt6
+#if (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-#endif
     QApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
+#endif
 
     QString release = RELEASE;
     bool portable = false;
@@ -443,6 +448,9 @@ int main(int argc, char *argv[]) {
             if (argc > (i + 1)) {
                 action = QString(argv[i + 1]).trimmed();
             }
+        } else if (arg == QStringLiteral("--version")) {
+            fprintf(stdout, "QOwnNotes %s\n", VERSION);
+            exit(0);
         }
     }
 

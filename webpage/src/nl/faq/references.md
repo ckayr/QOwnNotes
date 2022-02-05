@@ -56,7 +56,7 @@ Wat andere mensen zeiden over QOwnNotes ...
 - [What comes after Evernote? A QOwnNotes review. | JawFodder](http://www.jawfodder.com/what-comes-after-evernote-a-qownnotes-review/)
 - [Taking Notes with Nextcloud, QOwnNotes, and Notebooks](https://lifemeetscode.com/blog/2017/05/03/taking-notes-nextcloud-qownnotes-notebooks/)
     - using [Notebooks](http://www.notebooksapp.com/) to sync Notes via WebDAV on iOS
-- [hierarchical note taking applications : linux](https://www.reddit.com/r/linux/comments/5me4wv/hierarchical_note_taking_applications/)
+- [hiërarchische toepassingen voor het maken van notities: linux](https://www.reddit.com/r/linux/comments/5me4wv/hierarchical_note_taking_applications/)
 - [QownNotes - De la prise de notes chiffrées sur votre cloud personnel - Korben](https://korben.info/qownnotes.html)
 - [The 6 Best Windows Notepad Alternatives](http://www.makeuseof.com/tag/best-windows-notepad-alternatives/)
 - [Synchronisation des notes (QOwnNotes) — Wiki de la mère Zaclys](https://wiki.zaclys.com/index.php/Synchronisation_des_notes_(QOwnNotes))
@@ -163,7 +163,7 @@ Wat andere mensen zeiden over QOwnNotes ...
 - [Аналоги OneNote в Linux | Losst](https://losst.ru/analogi-onenote-v-linux#4_QOwnNotes)
 - [一款自由开源的免费笔记软件——QOwnNotes | 爱上分享](https://www.237y.com/qownnotes.htm)
 - [Малоизвестные Windows-программы для ведения заметок!](https://sovetybloga.ru/maloizvestnye-windows-programmy-dlya-vedeniya-zametok/)
-- [QOwnNotes Portable 20.8.10 (markdown note taker) Released | PortableApps.com](https://portableapps.com/news/2020-08-27--qownnotes-portable-20.8.10-released)
+- [QOwnNotes Portable 20.8.10 (markdown note-taker) Released | PortableApps.com](https://portableapps.com/news/2020-08-27--qownnotes-portable-20.8.10-released)
 - [QOwnNotes](https://www.slant.co/topics/6303/viewpoints/21/~note-taking-apps-for-linux~qownnotes)
     - <https://www.slant.co/topics/6303/~note-taking-apps-for-linux#21>
 - [QOwnNotes - Notepad and todo-list manager with Markdown support and Nextcloud integration : coolgithubprojects](https://www.reddit.com/r/coolgithubprojects/comments/izg63b/qownnotes_notepad_and_todolist_manager_with/)
@@ -186,13 +186,13 @@ Wat andere mensen zeiden over QOwnNotes ...
     - [QOwnNotes on Linux Unplugged](https://www.qownnotes.org/blog/2015-11-04-QOwnNotes-on-Linux-Unplugged.html)
 - [ownCloud development in March | ownCloud.org](https://owncloud.org/blog/owncloud-development-in-march/)
 - <http://tuxdiary.com/2015/03/18/papyrus/>
-- [Programmliste](http://pat-schmitz.de/mytr/frontend/all.php)
+- [Programmalijst](http://pat-schmitz.de/mytr/frontend/all.php)
 - <http://www.pcwelt.de/ratgeber/Software-fuer-die-Zusammenarbeit-im-Web-9903500.html>
 - [QOwnNotes - cross-platform open source plain-text file notepad : LinuxActionShow](https://www.reddit.com/r/LinuxActionShow/comments/48nosj/qownnotes_crossplatform_open_source_plaintext/)
 - [Floating on ownCloud 9 | LAS 410 : LinuxActionShow](https://www.reddit.com/r/LinuxActionShow/comments/4c8cng/floating_on_owncloud_9_las_410/)
 - <http://kmeleonbrowser.org/forum/read.php?12,119575,138590,page=54>
 - [Some new Breeze app icons in Frameworks 5.22 - Alex L.](http://www.alexl.netsons.org/blogposts/some-new-breeze-app-icons-in-frameworks-5-22/)
-    - [Planet KDE](https://planetkde.org/) at 16.05.16 19:46
+    - [Planet KDE](https://planetkde.org/) om 16.05.16 19:46
 - <http://portallinux.es/una-notas-turtl-springseed-laverna/>
     - comment
 - <http://zettelkasten.de/posts/zettelkasten-antifragile/>

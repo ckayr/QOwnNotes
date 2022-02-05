@@ -11,15 +11,102 @@
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QPlainTextEdit>
 #include <QtWidgets/QStatusBar>
+#include <QSettings>
+#include <QStandardPaths>
+#include <QDir>
 
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 0))
     #include<QRegularExpression>
-#else
-    #include<QRegExp>
-#endif
 
 FakeVimProxy::FakeVimProxy(QWidget *widget, MainWindow *mw, QObject *parent)
-    : QObject(parent), m_widget(widget), m_mainWindow(mw) {}
+    : QObject(parent), m_widget(widget), m_mainWindow(mw)
+{
+    using namespace FakeVim::Internal;
+
+    auto *handler = static_cast<FakeVim::Internal::FakeVimHandler*>(parent);
+
+    handler->installEventFilter();
+    handler->setupWidget();
+
+    const auto homeDir = QStandardPaths::standardLocations(QStandardPaths::HomeLocation).first();
+    const QFile vimRcQONFile(QDir(homeDir).filePath(".vimrc.qownnotes"));
+
+    // Try to load .vimrc.qownnotes or .vimrc files
+    if (vimRcQONFile.exists()) {
+        handler->handleCommand(QStringLiteral("source ") + vimRcQONFile.fileName());
+    } else {
+        const QFile vimRcFile(QDir(homeDir).filePath(".vimrc"));
+        if (vimRcFile.exists()) {
+            handler->handleCommand(QStringLiteral("source ") + vimRcFile.fileName());
+        }
+    }
+
+    QSettings settings;
+    bool setExpandTab = !settings.value(QStringLiteral("Editor/useTabIndent")).toBool();
+    fakeVimSettings()->item("et")->setValue(setExpandTab);
+    fakeVimSettings()->item("ts")->setValue(Utils::Misc::indentSize());
+    fakeVimSettings()->item("sw")->setValue(Utils::Misc::indentSize());
+
+
+    {
+        auto h = [this](const QString &contents, int cursorPos, int anchorPos, int msgLvl) {
+            changeStatusMessage(contents, cursorPos, anchorPos, msgLvl);
+        };
+        handler->commandBufferChanged.connect(h);
+    }
+
+    {
+        auto h = [this](const QString &msg) { changeExtraInformation(msg); };
+        handler->extraInformationChanged.connect(h);
+    }
+
+    {
+        auto h = [this](const QString &msg) { changeStatusData(msg); };
+        handler->statusDataChanged.connect(h);
+    }
+
+    {
+        auto h = [this](const QString &msg) { highlightMatches(msg); };
+        handler->highlightMatches.connect(h);
+    }
+
+    {
+        auto h = [this](bool *handled, const ExCommand &cmd) { handleExCommand(handled, cmd); };
+        handler->handleExCommandRequested.connect(h);
+    }
+
+    {
+        auto h = [this](const QTextCursor &cursor) { requestSetBlockSelection(cursor); };
+        handler->requestSetBlockSelection.connect(h);
+    }
+
+    {
+        auto h = [this]() { requestDisableBlockSelection(); };
+        handler->requestDisableBlockSelection.connect(h);
+    }
+
+    {
+
+        auto h = [this](bool *on) { requestHasBlockSelection(on); };
+        handler->requestHasBlockSelection.connect(h);
+    }
+
+    {
+        auto h = [this](int beginLine, int endLine, QChar typedChar) {
+            indentRegion(beginLine, endLine, typedChar);
+        };
+        handler->indentRegion.connect(h);
+    }
+
+    {
+        auto h = [this](bool *result, QChar c) {
+            checkForElectricCharacter(result, c);
+        };
+        handler->checkForElectricCharacter.connect(h);
+    }
+
+    // regular signal
+    connect(this, &FakeVimProxy::handleInput, handler, [handler](const QString &text) { handler->handleInput(text); });
+}
 
 void FakeVimProxy::changeStatusData(const QString &info) {
     m_statusData = info;
@@ -42,11 +129,7 @@ void FakeVimProxy::highlightMatches(const QString &pattern) {
 
     // Highlight matches.
     QTextDocument *doc = ed->document();
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 0))
     QRegularExpression re(pattern);
-#else
-    QRegExp re(pattern);
-#endif
     cur = doc->find(re);
 
     m_searchSelection.clear();
@@ -73,7 +156,7 @@ void FakeVimProxy::highlightMatches(const QString &pattern) {
     updateExtraSelections();
 }
 
-void FakeVimProxy::changeStatusMessage(const QString &contents, int cursorPos, int anchorPos, int messageLevel) {
+void FakeVimProxy::changeStatusMessage(const QString &contents, int cursorPos, int /*anchorPos*/, int /*messageLevel*/) {
     m_statusMessage =
         cursorPos == -1
             ? contents
@@ -131,12 +214,12 @@ void FakeVimProxy::requestSetBlockSelection(const QTextCursor &tc) {
 
     int from = cur.positionInBlock();
     int to = cur.anchor() - cur.document()->findBlock(cur.anchor()).position();
-    const int min = qMin(cur.position(), cur.anchor());
-    const int max = qMax(cur.position(), cur.anchor());
+    const int min = qMin<int>(cur.position(), cur.anchor());
+    const int max = qMax<int>(cur.position(), cur.anchor());
     for (QTextBlock block = cur.document()->findBlock(min);
          block.isValid() && block.position() < max; block = block.next()) {
-        cur.setPosition(block.position() + qMin(from, block.length()));
-        cur.setPosition(block.position() + qMin(to, block.length()),
+        cur.setPosition(block.position() + qMin<int>(from, block.length()));
+        cur.setPosition(block.position() + qMin<int>(to, block.length()),
                         QTextCursor::KeepAnchor);
         selection.cursor = cur;
         m_blockSelection.append(selection);
@@ -212,7 +295,7 @@ void FakeVimProxy::indentRegion(int beginBlock, int endBlock, QChar typedChar) {
 
             qint64 indent = firstNonSpace(previousLine);
             if (typedChar == '}')
-                indent = std::max(0, int(indent - indentSize));
+                indent = std::max<int>(0, int(indent - indentSize));
             else if (previousLine.endsWith(QLatin1String("{")))
                 indent += indentSize;
             const auto indentString = QStringLiteral(" ").repeated(indent);

@@ -20,12 +20,38 @@ p, ul, ol
 ul ul, ol ol, ul ol, ol ul
   margin: 0
 
+kbd
+  white-space: nowrap
+  direction: ltr
+
 .v-subheader.blog
   padding: 0
 
+code
+  direction: ltr
+
+div.line-numbers-mode
+  /* fix the direction of the content in code blocks */
+  direction: ltr
+  /* let the code not touch the right edge of the block */
+  padding-right: 1rem
+
 // add RTL styles
 // taken from: https://github.com/abbasifard/vuepress-rtl/blob/master/src/rtl.styl
-html:lang(fa)
+html[dir="rtl"]
+  ul, ol
+    padding-left: 0 !important;
+    padding-right: 1.2em;
+
+  div.line-numbers-wrapper
+    /* fix the placement of the line numbers */
+    left: 0
+
+  .page-nav > .inner > .prev { float: right }
+  .page-nav > .inner > .next { float: left  }
+  .page-nav > .inner > .prev:before { content: '→' }
+  .page-nav > .inner > .next:after  { content: '←' }
+
   a.sidebar-link
     border-left medium none color
     border-right 0.25rem solid transparent
@@ -57,6 +83,10 @@ html:lang(fa)
   .sidebar-heading
     padding-left 0
     padding-right 1.5rem
+    .arrow
+      right: 0.35em
+    .arrow.right
+      transform: rotate(180deg)
 
   .nav-links
     .nav-item

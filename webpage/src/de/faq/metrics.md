@@ -6,9 +6,9 @@ QOwnNotes (wie auch die Anwendung selbst) wird **von einer und manchmal auch von
 
 Releases werden für viele Plattformen und Distributionen erstellt (oft sehr alte Versionen davon). Sie aufrechtzuerhalten ist viel Arbeit.
 
-Die Metriken sind die einzige wirkliche Informationsquelle darüber, welche Versionen von Plattformen und Distributionen und welche Funktionen von den Benutzern verwendet werden, sodass Entscheidungen getroffen werden können, welche Versionen eingestellt werden und welche Funktionen mehr Arbeit erfordern und welche kaum verwendet werden.
+Die Metriken sind die einzige zuverlässige Informationsquelle darüber, auf welchen Versionen von Plattformen und Distributionen QOwnNotes ausgeführt wird. Sie zeigen auch, welche Features am beliebtesten sind, sodass Entscheidungen getroffen werden können, welche Versionen ausgemustert werden, welche Features mehr Arbeit benötigen und welche kaum genutzt werden.
 
-Gleiches gilt für die verwendeten Sprachen der Benutzer, die die Übersetzungen der Anwendung und der Dokumentation vorantreiben.
+Gleiches gilt für die Auswahl der bevorzugten Sprachen durch den Benutzer, die die Verbesserung der entsprechenden Übersetzungen fördert.
 
 ## Wo werden die Metriken gespeichert?
 

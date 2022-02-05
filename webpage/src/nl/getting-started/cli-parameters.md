@@ -1,10 +1,11 @@
-# Opdrachtregelinterfaceparameters
+# Opdrachtregel-interface-parameters
 
 U kunt deze parameters gebruiken op de opdrachtregelinterface:
 
 | Parameter                    | Beschrijving                                                                                                                        |
 | ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
 | `--help`                     | Toont het helpscherm                                                                                                                |
+| `--version`                  | Drukt het versienummer van de applicatie af                                                                                         |
 | `--portable`                 | Start de applicatie in draagbare modus                                                                                              |
 | `--clear-settings`           | Wist de instellingen en start de applicatie                                                                                         |
 | `--dump-settings`            | Print een dump van de instellingen en andere informatie over de applicatie en omgeving in GitHub Markdown en sluit de applicatie af |

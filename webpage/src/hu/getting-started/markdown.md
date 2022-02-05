@@ -182,7 +182,7 @@ cd Notes
 ```
 ~~~
 
-A jelenleg támogatott nyelvek (és kódblokk-azonosítók) a következők:
+Currently, supported languages (and code block identifiers) are:
 
 * BASh scripting, `bash`
 * C, `c`
@@ -216,12 +216,12 @@ A jelenleg támogatott nyelvek (és kódblokk-azonosítók) a következők:
 * YAML, `yml`
 * YAML, `yaml`
 
-## Táblázatok
+## Tables
 
-A táblázatok nem részei a Markdown alapvető specifikációinak, de a QOwnNotes előnézet támogatja őket. 
+Tables aren't part of the core Markdown spec, but the QOwnNotes preview supports them. 
 
-```markdown
-A kettőspontok használhatók az oszlopok igazítására.
+~~~markdown
+Colons can be used to align columns.
 
 | Tables        | Are           | Cool  |
 | ------------- |:-------------:| -----:|
@@ -240,7 +240,7 @@ Használhatja az inline Markdown funkciót is.
 ~~~
 
 ::: tip
-Nyomja meg az <kbd>Alt + Shift + T</kbd> billentyűkombinációt egy párbeszédpanel aktiválásához, amely segíthet táblázatok létrehozásában. Akár CSV fájlokat is importálhat abban a párbeszédpanelen.
+Press <kbd>Alt + Shift + T</kbd> to activate a dialog that can help you to create tables. Akár CSV fájlokat is importálhat abban a párbeszédpanelen.
 
 Használja a <kbd>Ctrl + szóköz</kbd>t egy jelölési táblázatban az automatikus formázáshoz.
 :::
@@ -284,9 +284,13 @@ ___
 
 ## Sortörések
 
-- **Két új volnal** szerez Önnek egy **új bekezdést**.
-- **Egy új sor** egy **új sort kap ugyanabban a bekezdésben**.
-- **Sortörés bekezdés nélkül**, **két zárójelet kell használnia**.
+- You can break a paragraph into more than a single line for easier editing, they still render as a single paragraph with no breaks.
+- You can force a line break inside a paragraph by ending a line with two spaces.
+- You can make a separate paragraph by delimiting it by empty lines.
+
+::: tip
+You can enter two spaces and a newline with <kbd>⇧ Shift</kbd> + <kbd>Return</kbd>.
+:::
 
 ```markdown
 Itt egy sor, amellyel kezdhetjük.
@@ -298,12 +302,12 @@ Ezt a sort csak két zárójel és egyetlen új sor választja el, tehát külö
 ```
 
 ::: tip
-A szóközöket a szerkesztő alapértelmezés szerint kiemeli.
+Trailing spaces are highlighted by default in the editor.
 :::
 
 ## Hozzászólások
 
-A jegyzet nem jelenik meg az előnézetben.
+Comments are not shown in the preview.
 
 ```markdown
 [comment]: # (Ez a megjegyzés nem jelenik meg az előnézetben)
@@ -312,12 +316,12 @@ A jegyzet nem jelenik meg az előnézetben.
 ```
 
 ::: tip
-A jegyzetek vezető html megjegyzésblokkja az automatikus jegyzetfájl-generálás során sem kerül figyelembe.
+A leading html comment block in a note will also be ignored in the automatic note filename generation.
 :::
 
 ## Jelölőnégyzet -listák
 
-Létrehozhat egyszerű todo listákat jelölőnégyzet listákkal.
+You can create simple todo lists with checkbox lists.
 
 ```markdown
 - [x] done
@@ -325,12 +329,12 @@ Létrehozhat egyszerű todo listákat jelölőnégyzet listákkal.
 ```
 
 ::: tip
-Az előnézetben bejelölheti / eltávolíthatja a jelölőnégyzeteket.
+You can check/un-check checkboxes in the preview.
 :::
 
 ## Frontmatter
 
-A QOwnNotes alkalmazásban frontmatterrel (pl. YAML) adhat további meta-információkat. **nem jelenik meg az előnézetben**, és **nem zavarja az automatikus jegyzetfájlnév előállítását**.
+In QOwnNotes you can use a frontmatter (e.g. YAML) to add some extra meta information. It will **not be shown in the preview** and will **not disturb the the automatic note filename generation**.
 
 ```markdown
 ---
@@ -343,4 +347,4 @@ leírás: Néhány leírás
 Némi szöveg
 ```
 
-Ennek a példafájlnak a neve `Note headline starts here.md` lenne.
+The filename of this example note would be `Note headline starts here.md`.

@@ -182,7 +182,8 @@ cd Notes
 ```
 ~~~
 
-Derzeit unterstützte Sprachen (und Codeblock-IDs) sind:
+Currently, supported languages (and code block identifiers) are:
+
 * BASh scripting, `bash`
 * C, `c`
 * C++, `cpp`
@@ -215,11 +216,11 @@ Derzeit unterstützte Sprachen (und Codeblock-IDs) sind:
 * YAML, `yml`
 * YAML, `yaml`
 
-## Tabellen
+## Tables
 
-Tabellen sind nicht Teil der Kern-Markdown-Spezifikation, aber die QOwnNotes-Vorschau unterstützt sie. 
+Tables aren't part of the core Markdown spec, but the QOwnNotes preview supports them. 
 
-```markdown
+~~~markdown
 Doppelpunkte können zum Ausrichten von Spalten verwendet werden.
 
 | Tables        | Are           | Cool  |
@@ -239,7 +240,7 @@ Sie können auch Inline-Markdown verwenden.
 ~~~
 
 ::: tip
-Drücken Sie <kbd>Alt + Umschalt + T</kbd>, um ein Dialogfeld zu aktivieren, mit dem Sie Tabellen erstellen können. In diesem Dialog können Sie sogar CSV-Dateien importieren!
+Press <kbd>Alt + Shift + T</kbd> to activate a dialog that can help you to create tables. In diesem Dialog können Sie sogar CSV-Dateien importieren!
 
 Verwenden Sie <kbd>Strg + Leertaste</kbd> in einer Markdown-Tabelle, um sie automatisch zu formatieren.
 :::
@@ -283,9 +284,13 @@ ___
 
 ## Zeilenumbrüche
 
-- **Mit zwei Zeilenumbrüchen** erhalten Sie einen **neuen Absatz**.
-- **Mit einer neuen Zeile** erhalten Sie eine **neue Zeile im selben Absatz**.
-- Um einen Zeilenumbruch **ohne Absatz** zu erzielen, müssen Sie **zwei nachgestellte Leerzeichen** verwenden.
+- You can break a paragraph into more than a single line for easier editing, they still render as a single paragraph with no breaks.
+- You can force a line break inside a paragraph by ending a line with two spaces.
+- You can make a separate paragraph by delimiting it by empty lines.
+
+::: tip
+You can enter two spaces and a newline with <kbd>⇧ Shift</kbd> + <kbd>Return</kbd>.
+:::
 
 ```markdown
 Hier ist eine Zeile, mit der wir beginnen sollten.
@@ -297,12 +302,12 @@ Diese Zeile wird nur durch zwei nachgestellte Leerzeichen und eine einzelne neue
 ```
 
 ::: tip
-Nachgestellte Leerzeichen werden im Editor standardmäßig hervorgehoben.
+Trailing spaces are highlighted by default in the editor.
 :::
 
 ## Kommentare
 
-Kommentare werden in der Vorschau nicht angezeigt.
+Comments are not shown in the preview.
 
 ```markdown
 [Kommentar]: # (Dieser Kommentar wird nicht in der Vorschau angezeigt.)
@@ -311,12 +316,12 @@ Kommentare werden in der Vorschau nicht angezeigt.
 ```
 
 ::: tip
-Ein führender HTML-Kommentarblock in einer Notiz wird bei der automatischen Generierung von Notizdateinamen ebenfalls ignoriert.
+A leading html comment block in a note will also be ignored in the automatic note filename generation.
 :::
 
 ## Kontrollkästchenlisten
 
-Sie können einfache Aufgabenlisten mit Kontrollkästchenlisten erstellen.
+You can create simple todo lists with checkbox lists.
 
 ```markdown
 - [x] done
@@ -324,12 +329,12 @@ Sie können einfache Aufgabenlisten mit Kontrollkästchenlisten erstellen.
 ```
 
 ::: tip
-Sie können Kontrollkästchen in der Vorschau aktivieren / deaktivieren.
+You can check/un-check checkboxes in the preview.
 :::
 
 ## Inhaltsübersicht
 
-In QOwnNotes können Sie eine Frontmatter (z.B. YAML) verwenden, um zusätzliche Metainformationen hinzuzufügen. Es wird **nicht in der Vorschau angezeigt** und **stört die automatische Generierung von Notizendateinamen** nicht.
+In QOwnNotes you can use a frontmatter (e.g. YAML) to add some extra meta information. It will **not be shown in the preview** and will **not disturb the the automatic note filename generation**.
 
 ```markdown
 ---
@@ -342,4 +347,4 @@ Beschreibung: Ein wenig Beschreibung
 Etwas Text
 ```
 
-Der Dateiname dieser Beispielnotiz lautet `. Die Überschrift der Notiz beginnt hier.md `.
+The filename of this example note would be `Note headline starts here.md`.

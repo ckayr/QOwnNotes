@@ -246,7 +246,7 @@ bool Note::fillByFileName(const QString &fileName, int noteSubFolderId) {
  * @return
  */
 Note Note::fetchByRelativeFilePath(const QString &relativePath) {
-    const QFileInfo &fileInfo{relativePath};
+    const QFileInfo fileInfo(relativePath);
 
     // load note subfolder and note from the relative path
     // be aware that there must not be a ".." in the path, a canonical path must
@@ -1518,13 +1518,8 @@ bool Note::storeNoteTextFileToDisk(bool &currentNoteTextChanged) {
             // remove the old note file
             if (oldFile.exists() && oldFileInfo.isFile() &&
                 oldFileInfo.isReadable() && oldFile.remove()) {
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 0))
                 qInfo() << QObject::tr("Renamed note-file was removed: %1")
                                .arg(oldFile.fileName());
-#else
-                qDebug() << __func__ << " - 'renamed note-file was removed': "
-                         << oldFile.fileName();
-#endif
 
             } else {
                 qWarning() << QObject::tr(
@@ -1635,13 +1630,15 @@ bool Note::handleNoteTextFileName() {
 
     // remove frontmatter from start of markdown text
     if (noteText.startsWith(QLatin1String("---"))) {
-        static const QRegularExpression re(QStringLiteral(R"(^---\n.+?\n---\n)"), QRegularExpression::DotMatchesEverythingOption);
+        static const QRegularExpression re(QStringLiteral(R"(^---((\r\n)|(\n\r)|\r|\n).+?((\r\n)|(\n\r)|\r|\n)---((\r\n)|(\n\r)|\r|\n))"),
+                                           QRegularExpression::DotMatchesEverythingOption);
         noteText.remove(re);
     }
 
     // remove html comment from start of markdown text
     if (noteText.startsWith(QLatin1String("<!--"))) {
-        static const QRegularExpression re(QStringLiteral(R"(^<!--.+?-->\n)"), QRegularExpression::DotMatchesEverythingOption);
+        static const QRegularExpression re(QStringLiteral(R"(^<!--.+?-->((\r\n)|(\n\r)|\r|\n))"),
+                                           QRegularExpression::DotMatchesEverythingOption);
         noteText.remove(re);
     }
 
@@ -2225,9 +2222,7 @@ bool Note::refetch() {
  * Returns the suffix of the note file name
  */
 QString Note::fileNameSuffix() const {
-    QFileInfo fileInfo;
-    fileInfo.setFile(_fileName);
-    return fileInfo.suffix();
+    return QFileInfo(_fileName).suffix();
 }
 
 /**
@@ -2455,7 +2450,11 @@ QString Note::textToMarkdownHtml(QString str, const QString &notesPath,
     unsigned flags = MD_DIALECT_GITHUB | MD_FLAG_WIKILINKS |
                      MD_FLAG_LATEXMATHSPANS | MD_FLAG_UNDERLINE;
     // we parse the task lists ourselves
+
+    // we render checkboxes when using qlitehtml
+#ifndef USE_QLITEHTML
     flags &= ~MD_FLAG_TASKLISTS;
+#endif
 
     const QSettings settings;
     if (!settings
@@ -2473,23 +2472,10 @@ QString Note::textToMarkdownHtml(QString str, const QString &notesPath,
 
     // remove frontmatter from markdown text
     if (str.startsWith(QLatin1String("---"))) {
-        static const QRegularExpression re(QStringLiteral(R"(^---\n.+?\n---\n)"), QRegularExpression::DotMatchesEverythingOption);
+        static const QRegularExpression re(QStringLiteral(R"(^---((\r\n)|(\n\r)|\r|\n).+?((\r\n)|(\n\r)|\r|\n)---((\r\n)|(\n\r)|\r|\n))"),
+                                           QRegularExpression::DotMatchesEverythingOption);
         str.remove(re);
     }
-
-    /*CODE HIGHLIGHTING*/
-    int cbCount = nonOverlapCount(str, '`');
-    if (cbCount % 2 != 0) --cbCount;
-
-    int cbTildeCount = nonOverlapCount(str, '~');
-    if (cbTildeCount % 2 != 0) --cbTildeCount;
-
-    // divide by two to get actual number of code blocks
-    cbCount /= 2;
-    cbTildeCount /= 2;
-
-    highlightCode(str, QStringLiteral("```"), cbCount);
-    highlightCode(str, QStringLiteral("~~~"), cbTildeCount);
 
     // parse for relative file urls and make them absolute
     // (for example to show images under the note path)
@@ -2565,6 +2551,21 @@ QString Note::textToMarkdownHtml(QString str, const QString &notesPath,
     if (!preScriptResult.isEmpty()) {
         str = std::move(preScriptResult);
     }
+
+    /*CODE HIGHLIGHTING*/
+    int cbCount = nonOverlapCount(str, '`');
+    if (cbCount % 2 != 0) --cbCount;
+
+    int cbTildeCount = nonOverlapCount(str, '~');
+    if (cbTildeCount % 2 != 0) --cbTildeCount;
+
+    // divide by two to get actual number of code blocks
+    cbCount /= 2;
+    cbTildeCount /= 2;
+
+    // this will also add html in the code blocks, so we will do this at the very end
+    highlightCode(str, QStringLiteral("```"), cbCount);
+    highlightCode(str, QStringLiteral("~~~"), cbTildeCount);
 
     const auto data = str.toUtf8();
     if (data.size() == 0) {
@@ -3546,7 +3547,7 @@ bool Note::handleNoteMoving(const Note &oldNote) {
  */
 QString Note::createNoteHeader(const QString &name) {
     QString header = name.trimmed() + QStringLiteral("\n");
-    const auto len = std::min(name.length(), 40);
+    const auto len = std::min<int>(name.length(), 40);
     header.reserve(len);
     header.append(QString(QChar('=')).repeated(len));
     header.append(QStringLiteral("\n\n"));
@@ -3815,7 +3816,7 @@ bool Note::scaleDownImageFileIfNeeded(QFile &file) {
     }
 
     QMimeDatabase db;
-    QMimeType type = db.mimeTypeForFile(file);
+    QMimeType type = db.mimeTypeForFile(file.fileName());
 
     // we don't want to resize SVGs because Qt can't store them
     if (type.name().contains("image/svg")) {
@@ -3971,7 +3972,7 @@ QString Note::getNotePreviewText(bool asHtml, int lines) const {
     line.truncate(80);
     noteText += line;
 
-    const auto min = std::min(lines, lineList.count());
+    const auto min = std::min<int>(lines, lineList.count());
     for (int i = 1; i < min; i++) {
         noteText += QStringLiteral("\n");
 

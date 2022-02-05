@@ -1,6 +1,208 @@
 # QOwnNotes Changelog
 
+## 22.2.0
+- some small text, code and Qt 6 support improvements were made 
+- an issue was fixed were changes in the current note were not detected correctly if the
+  current note was in a note sub-folder (for [#2433](https://github.com/pbek/QOwnNotes/issues/2433))
+
+## 22.1.12
+- you can now edit instantly when you disabled the read-only mode by checking
+  `Don't ask again` in the dialog you get when typing in read-only mode
+  (for [#2421](https://github.com/pbek/QOwnNotes/issues/2421), thank you @noureddin)
+- added more Arabic translation (thank you noureddin)
+
+## 22.1.11
+- a lot more work went into porting QOwnNotes to Qt 6 (for [#2414](https://github.com/pbek/QOwnNotes/pull/2414), thank you @Waqar144)
+- added more translation (thank you rawfreeamy, chocolatine, amirkbrpr, mguerra,
+  hansa2662, kkatalinux, marterra, noureddin, rakekniven)
+
+## 22.1.10
+- added a new editor color schema *Orangueen* by @Zorziel
+  (for [#2405](https://github.com/pbek/QOwnNotes/issues/2405))
+- jumping to headings from note links in the note edit panel was fixed
+  (for [#2404](https://github.com/pbek/QOwnNotes/issues/2404), thank you @Waqar144)
+- fixed a possible crash when quitting the application after accepting the settings dialog
+  (for [#2407](https://github.com/pbek/QOwnNotes/issues/2407), thank you @Waqar144)
+
+## 22.1.9
+- potential crashes in the logging panel were fixed (for [#2391](https://github.com/pbek/QOwnNotes/issues/2391), thank you @Waqar144)
+- <kbd>Ctrl</kbd> + <kbd>V</kbd> now also triggers the dialog to enable note editing
+  (for [#2397](https://github.com/pbek/QOwnNotes/issues/2397))
+- added more translation (thank you marcoxbresciani, amirkbrpr, marterra, hansa2662)
+
+## 22.1.8
+- an attempt was made to fix potential crashes with the Markdown highlighter
+  (for [#2388](https://github.com/pbek/QOwnNotes/issues/2388), thank you @Waqar144)
+- the missing `New note` context menu entry in the note sub-folder panel was
+  added again (for [#2387](https://github.com/pbek/QOwnNotes/issues/2387))
+- items in the navigation panel are now highlighted according to the position of
+  the cursor in the note edit panel (for [#2136](https://github.com/pbek/QOwnNotes/issues/2136), thank you @fnkhz)
+- added more translation (thank you amirkbrpr, marcoxbresciani, noureddin,
+  hansa2662, marterra, rawfreeamy)
+
+## 22.1.7
+- a crash when correcting a misspelled word was fixed (for [#2377](https://github.com/pbek/QOwnNotes/issues/2377), thank you @Waqar144)
+- added more translation (thank you amirkbrpr, noureddin, mguerra, marterra)
+
+## 22.1.6
+- support for Qt < 5.6 was dropped with version 22.1.5, that mainly means there will
+  be no repositories anymore for Ubuntu 16.04, Debian 8.0 and some older versions of
+  Fedora and openSUSE Linux (for [#2373](https://github.com/pbek/QOwnNotes/pull/2373))
+    - please use the [AppImage version of QOwnNotes](https://www.qownnotes.org/installation/appimage.html)
+      (64bit only) if you are still on one of those Linux distributions
+- added a new editor color schema *OLED red* by @FireFragment
+  (for [#2375](https://github.com/pbek/QOwnNotes/issues/2375))
+- added more translation (thank you hansa2662, amirkbrpr, chocolatine, marterra,
+  bonnjalal, rawfreeamy, noureddin, mguerra)
+
+## 22.1.5
+- italic and bold formatted text in headlines will now have the same size as the headline
+  (for [#2369](https://github.com/pbek/QOwnNotes/issues/2369), thank you @Waqar144)
+- opening images from the note edit was fixed (for [#2371](https://github.com/pbek/QOwnNotes/issues/2371), thank you @Waqar144)
+- the spell-checker context menu of the note edit was integrated into the general
+  context menu (for [#1426](https://github.com/pbek/QOwnNotes/issues/1426), thank you @Waqar144)
+
+## 22.1.4
+- for notes with more than 200k characters the in-note search will now wait for 250ms
+  before showing the search result, so users have time to enter more search characters
+  (for [#2335](https://github.com/pbek/QOwnNotes/issues/2335), thank you @fnkhz)
+- some database warnings were fixed when running the application for the first time
+- the data path detection was improved for AppImages in portable mode
+  (for [#2324](https://github.com/pbek/QOwnNotes/issues/2324#issuecomment-990642833))  
+- added more translation (thank you marterra, amirkbrpr, noureddin, rawfreeamy)
+
+## 22.1.3
+- Joplin sub-folders can now also be imported if the parent folder is missing
+  (for [#2361](https://github.com/pbek/QOwnNotes/issues/2361))
+- some issue with Windows line breaks for frontmatter and comment detection
+  have been fixed (for [#2343](https://github.com/pbek/QOwnNotes/issues/2343))
+- some performance improvements were made (for [#2362](https://github.com/pbek/QOwnNotes/pull/2362), thank you @Waqar144) 
+
+## 22.1.2
+- an issue with rendering "bold" really bold in the note edit panel when the default font
+  is monospaced was fixed (for [#2339](https://github.com/pbek/QOwnNotes/issues/2339))  
+- more [QLiteHtml](https://github.com/litehtml/litehtml) feature integration was done
+  (for [#2352](https://github.com/pbek/QOwnNotes/pull/2352), thank you @Waqar144)
+- added more German, Brazilian Portuguese, Polish translation (thank you rakekniven, marterra, hansa2662)
+
+## 22.1.1
+- the tag tree and note subfolder tree resizing was improved (for [#2350](https://github.com/pbek/QOwnNotes/pull/2350), thank you @Waqar144)
+- more [QLiteHtml](https://github.com/litehtml/litehtml) feature integration was done
+  (for [#2349](https://github.com/pbek/QOwnNotes/pull/2349), thank you @Waqar144)
+- an issue with scripts getting Markdown code, that was already modified too much
+  by code block highlighting was fixed (for [#2343](https://github.com/pbek/QOwnNotes/issues/2343))
+- added more translation (thank you noureddin, amirkbrpr, marterra, hansa2662)
+
+## 22.1.0
+- another attempt was made to debug/fix the application not starting automatically
+  after an update on macOS Big Sur (for [#2339](https://github.com/pbek/QOwnNotes/issues/2339))
+- [QLiteHtml](https://github.com/litehtml/litehtml) was integrated experimentally
+  to be enabled with flags at compile time (for [#2345](https://github.com/pbek/QOwnNotes/pull/2345), thank you @Waqar144)
+- an attempt was made to work around an AppImage update executable permissions issue
+  by setting the permissions a 2nd time after the renaming of the AppImage file
+  (for [#2342](https://github.com/pbek/QOwnNotes/issues/2342))
+- added more Arabic, Persian, French translation (thank you noureddin, amirkbrpr, chocolatine)
+
+## 21.12.8
+- pressing <kbd>Ctrl</kbd> + <kbd>Space</kbd> or <kbd>Ctrl</kbd> + `Click` on
+  reference links in the note text edit will now open the referenced URL in the
+  default browser (for [#2341](https://github.com/pbek/QOwnNotes/issues/2341))
+- added more Arabic translation (thank you noureddin)
+
+## 21.12.7
+- an issue with creating new Nextcloud connections was fixed (for [#2329](https://github.com/pbek/QOwnNotes/issues/2329))
+- an attempt was made to debug/fix the application not starting automatically
+  after an update on macOS Big Sur (for [#2339](https://github.com/pbek/QOwnNotes/issues/2339))
+- added more translation (thank you noureddin, mguerra, marcoxbresciani, skosho,
+  marterra, rakekniven)
+
+## 21.12.6
+- the builds for Qt < 5.15 were fixed (for [#2329](https://github.com/pbek/QOwnNotes/issues/2329))
+
+## 21.12.5
+- the account id of a Nextcloud account will now be fetched and stored as part
+  of the Nextcloud Login Flow v2 to be used to generate the CalDAV URLs
+  (for [#2329](https://github.com/pbek/QOwnNotes/issues/2329))
+  - this fixes todo list issues with SSO logins like via LDAP
+- some wording issues in dialogs were fixed
+- added more translation (thank you noureddin, amirkbrpr, hansa2662, mguerra, rawfreeamy)
+
+## 21.12.4
+- when doing a regular expression search in a note a stuck application is now prevented
+  when the user enters just start or end markers (for [#2302](https://github.com/pbek/QOwnNotes/issues/2302))
+- a glitch in the custom CalDAV server settings was fixed
+- added more translation (thank you amirkbrpr, wineee, seemless, mguerra,
+  rawfreeamy, hansa2662, marterra, ivonkatran, rakekniven)
+
+## 21.12.3
+- pasting of HTML as Markdown and dropping of images is now fixed again, and you
+  can select if you want to paste HTML as Markdown or as text file attachment
+  (for [#2327](https://github.com/pbek/QOwnNotes/issues/2327))
+- opening of text file attachments now also works if note sub-folders are disabled
+  (for [#2327](https://github.com/pbek/QOwnNotes/issues/2327))
+- added more translation (thank you rawfreeamy, amirkbrpr, marterra, rakekniven)
+
+## 21.12.2
+- in-note searching while renaming a note via its headline is now prevented, to
+  prevent messing up the headline while typing (for [#2325](https://github.com/pbek/QOwnNotes/issues/2325))
+- you can now paste plain text from the clipboard into the note as text file
+  attachment with <kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>V</kbd>
+  (for [#2327](https://github.com/pbek/QOwnNotes/issues/2327))
+- links to attachments with extensions, that are used for notes are now opened
+  externally instead of attempted to being opened as note (that doesn't exist)
+  (for [#2327](https://github.com/pbek/QOwnNotes/issues/2327))
+- added more translation (thank you mguerra, amirkbrpr, ivonkatran, marcoxbresciani, rawfreeamy)
+
+## 21.12.1
+- the `#`s in the Markdown headings will be now styled as "masked syntax", but
+  with the size of the heading (for [#2321](https://github.com/pbek/QOwnNotes/issues/2321))
+- the [QOwnNotesAPI Nextcloud App](https://apps.nextcloud.com/apps/qownnotesapi)
+  was updated to version 21.12.0 to support Nextcloud 23 (for [#36](https://github.com/pbek/qownnotesapi/issues/36))
+- added more translation (thank you mguerra, rawfreeamy, ivonkatran, i****myself,
+  chocolatine, marterra)
+
+## 21.12.0
+- highlighting support for checkboxes list with an `X` (instead of `x`) was added
+  (for [#2313](https://github.com/pbek/QOwnNotes/issues/2313), thank you @sanderboom)
+- an attempt was made to fix a rare crash (for [#2319](https://github.com/pbek/QOwnNotes/issues/2319))
+- added more translation (thank you amirkbrpr, rawfreeamy, danilosf, chocolatine)
+
+## 21.11.14
+- the `--version` parameter now also works when another instance of the
+  application is already running
+- version 0.3.2 of the **[QOwnNotes command-line snippet manager](https://github.com/qownnotes/qc)**
+  (qc) was released
+    - add Homebrew tap for qc (`brew install qownnotes/qc/qc`)
+- added more translation (thank you marterra, ivonkatran, rawfreeamy)
+
+## 21.11.13
+- a `--version` parameter to print out the version number of the application was added
+- added more translation (thank you rawfreeamy, marterra, chocolatine)
+
+## 21.11.12
+- command snippets can now also be stored in `bash` or `sh` code blocks,
+  preceded by a heading 2 or higher as a description (for [#2304](https://github.com/pbek/QOwnNotes/issues/2304))
+  - for more information please visit [Command-line snippet manager](https://www.qownnotes.org/getting-started/command-line-snippet-manager.html)
+- an issue with the bookmarks note name being overwritten by `Commands` when
+  saving settings in the settings dialog was fixed (for [#2304](https://github.com/pbek/QOwnNotes/issues/2304))
+    - if your bookmarks note name was `Commands` it will be set to `Bookmarks`
+      automatically on the next startup of the application
+- version 0.3.0 of the **[QOwnNotes command-line snippet manager](https://github.com/qownnotes/qc)**
+  (qc) was released
+    - enable sorting of snippets via settings and allow sorting case-insensitively
+    - cache snippets in case QOwnNotes is not running
+    - don't throw an error if selectCmd was exited with an error code (e.g. by `Ctrl + C`)
+- added more translation (thank you marcoxbresciani, mguerra, rawfreeamy, marterra, amirkbrpr)
+
 ## 21.11.11
+- there now is a software repository for **Fedora 35**
+    - please visit the [Fedora installation page](https://www.qownnotes.org/installation/fedora.html#fedora-35)
+      for instructions
+- there now is a software repository for **Raspberry Pi OS 11**
+    - please visit the [Raspberry Pi OS installation page](https://www.qownnotes.org/installation/raspberry-pi-os.html#raspberry-pi-os-11)
+      for instructions
+- now whitespaces after the list characters `-` or `*` for command or bookmark
+  lists are allowed (for [#2304](https://github.com/pbek/QOwnNotes/issues/2304))
 - an issue with no note being set initially after startup when using the note
   tagging scripting hooks was fixed (for [#2309](https://github.com/pbek/QOwnNotes/issues/2309))
  
@@ -356,7 +558,7 @@
 - since notes in Nextcloud Notes on the web and on Android now allow renaming of
   notes this also is the new default setting for note folders in QOwnNotes
     - existing note folders will not be modified automatically
-- added more translation (thank you amirkbrpr, mguerra, rakekniven, ihatemyself, rawfreeamy, marterra)
+- added more translation (thank you amirkbrpr, mguerra, rakekniven, i****myself, rawfreeamy, marterra)
 
 ## 21.8.11
 - a few features were added to the todo dialog (for [#2210](https://github.com/pbek/QOwnNotes/issues/2210))
@@ -5397,7 +5599,7 @@
     - following features should already work via the QOwnNotes user interface
         - initially importing tags like `@tag` from your notes and overwriting
           your current tag assignment
-            - you will not loose your tags tree, just the former assignment to notes
+            - you will not lose your tags tree, just the former assignment to notes
             - you can still move tags into other tags
             - if more than one tag has the same name in your tag tree the 
               first hit will be assigned

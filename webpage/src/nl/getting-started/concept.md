@@ -48,7 +48,7 @@ graph TB
 ## Markdown-notitiebestanden
 
 - Je **bezit** al je notities en media / bijlagen!
-- Uw aantekeningen worden op uw desktopcomputer opgeslagen als **plain-text Markdown files**
+- Your notes are stored as **plain-text Markdown files** on your desktop computer
 - U kunt naast QOwnNotes elke gewenste teksteditor gebruiken om uw notitiebestanden te bekijken of te bewerken
 - **Synchroniseer uw notities** met andere apparaten (desktop en mobiel) met uw [Nextcloud](https://nextcloud.com/) of [ownCloud](https://owncloud.org/) synchronisatieclient naar uw server
 
@@ -61,7 +61,7 @@ U kunt uw **browserbladwijzers** beheren met QOwnNotes of deze gebruiken als **w
 De browserextensies werken **offline**, geen internetverbinding nodig. Bezoek de [QOwnNotes Web Companion browserextensie](browser-extension.md) voor meer informatie.
 :::
 
-## QOwnNotes command-line snippet manager
+## QOwnNotes-opdrachtregelfragmentbeheer
 
 U kunt uw **opdrachtfragmenten** beheren met QOwnNotes en ze uitvoeren op de opdrachtregel.
 

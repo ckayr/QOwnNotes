@@ -10,13 +10,13 @@
 #
 
 # uncomment this if you want to force a version
-#QOWNNOTES_VERSION=19.3.4.1
+#QOWNNOTES_VERSION=22.1.11.1
 
 BRANCH=develop
 #BRANCH=master
 
 # https://wiki.ubuntu.com/Releases
-UBUNTU_RELEASES=( "xenial" "bionic" "focal" "hirsute" "impish" "jammy" )
+UBUNTU_RELEASES=( "bionic" "focal" "impish" "jammy" )
 
 
 DATE=$(LC_ALL=C date +'%a, %d %b %Y %T %z')

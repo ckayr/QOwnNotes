@@ -463,11 +463,7 @@ QVector<Tag> Tag::fetchAllOfNotes(const QVector<Note> &notes) {
 
     //get all tags for the notes list
     for (const Note &note : notes) {
-#if (QT_VERSION < QT_VERSION_CHECK(5, 5, 0))
-        notesTagList += Tag::fetchAllOfNote(note);
-#else
         notesTagList.append(Tag::fetchAllOfNote(note));
-#endif
     }
     //sort
     std::sort (notesTagList.begin(), notesTagList.end());
@@ -713,9 +709,9 @@ QVector<int> Tag::fetchAllLinkedNoteIds(int tagId, const bool fromAllSubfolders,
         for (int r = 0; query.next(); r++) {
             // always keep in mind that note_file_name is no file name,
             // but the base name (so "my-note", instead of "my-note.md")
-            const QString &name =
+            const QString name =
                 query.value(QStringLiteral("note_file_name")).toString();
-            const QString &noteSubFolderPathData =
+            const QString noteSubFolderPathData =
                 query.value(QStringLiteral("note_sub_folder_path")).toString();
             int noteSubFolderId =
                 NoteSubFolder::fetchByPathData(noteSubFolderPathData, QStringLiteral("/"))
@@ -770,9 +766,9 @@ QVector<int> Tag::fetchAllLinkedNoteIdsForFolder(int tagId,
         for (int r = 0; query.next(); r++) {
             // always keep in mind that note_file_name is no file name,
             // but the base name (so "my-note", instead of "my-note.md")
-            const QString &name =
+            const QString name =
                 query.value(QStringLiteral("note_file_name")).toString();
-            const QString &noteSubFolderPathData =
+            const QString noteSubFolderPathData =
                 query.value(QStringLiteral("note_sub_folder_path")).toString();
             int noteSubFolderId =
                 NoteSubFolder::fetchByPathData(noteSubFolderPathData, QStringLiteral("/"))

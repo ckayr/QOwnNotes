@@ -100,7 +100,7 @@ Il existe plusieurs façons de créer des liens.
 [Vous pouvez utiliser des nombres pour les définitions de liens de style référence][1]
 
 Les URL et URL entre crochets angulaires seront automatiquement transformées en liens dans l'aperçu. 
-http://www.example.com or <http://www.example.com>
+http://www.example.com ou <http://www.example.com>
 
 [1]: https://www.qownnotes.org
 ```
@@ -182,16 +182,16 @@ cd Notes
 ```
 ~~~
 
-Les languages actuellement pris en charge (et les identificateurs de bloc de code) sont :
+Les languages (et identifiants de blocs de code) actuellement pris en charge sont :
 
-* Script BASh, `bash`
+* BASh scripting, `bash`
 * C, `c`
-* C ++, `cpp`
-* C ++, `cxx`
-* C ++, `c ++`
-* C #, `c #`
+* C++, `cpp`
+* C++, `cxx`
+* C++, `c++`
+* C#, `c#`
 * CMake, `cmake`
-* C #, `csharp`
+* C#, `csharp`
 * CSS, `css`
 * Go, `go`
 * HTML, `html`
@@ -206,7 +206,7 @@ Les languages actuellement pris en charge (et les identificateurs de bloc de cod
 * Python, `python`
 * QML, `qml`
 * Rust, `rust`
-* Scripting shell, `sh`
+* Shell scripting, `sh`
 * SQL, `sql`
 * TypeScript, `ts`
 * TypeScript, `typescript`
@@ -216,13 +216,12 @@ Les languages actuellement pris en charge (et les identificateurs de bloc de cod
 * YAML, `yml`
 * YAML, `yaml`
 
-
 ## Tableaux
 
-Les tableaux ne font pas partie de la spécification Markdown principale mais l'aperçu de QOwnNotes les prend en charge. 
+Les tableaux ne font pas partie des spécifications originales de Markdown mais le mode de prévisualisation de QOwnNotes les prend en charge. 
 
-``` markdown
-Les deux points peuvent être utilisés pour aligner les colonnes.
+~~~markdown
+Les double-points peuvent être utilisés pour aligner le contenu des colonnes.
 
 | Les Tables | Sont | Chouettes |
 | ------------- |: -------------: | -----: |
@@ -241,7 +240,7 @@ Vous pouvez également utiliser le Markdown en ligne.
 ~~~
 
 ::: tip
-Appuyez sur <kbd>Alt + Maj + T</kbd> pour activer une boîte de dialogue qui peut vous aider à créer des tableaux. Vous pouvez même importer des fichiers CSV dans cette boîte de dialogue.
+Appuyez sur <kbd>Alt + Maj + T</kbd> pour faire apparaître une boîte de dialogue qui vous aidera à créer des tableaux. Vous pouvez même importer des fichiers CSV dans cette boîte de dialogue.
 
 Utilisez <kbd>Ctrl + Espace</kbd> dans un tableau de démarquage pour le formater automatiquement.
 :::
@@ -297,9 +296,13 @@ ___
 
 ## Sauts de ligne
 
-- **Deux retours à la ligne** vous donneront un **nouveau paragraphe**.
-- **Une nouvelle ligne** vous donnera une nouvelle ligne **dans le même paragraphe**.
-- Pour avoir un saut de ligne **sans paragraphe**, vous devrez utiliser **deux espaces de fin**.
+- Vous pouvez construire un paragraphe comme un enchaînement de plusieurs lignes pour en faciliter l'édition, il sera tout de même affiché comme un seul paragraphe.
+- Dans un paragraphe, vous pouvez forcer un retour à la ligne en insérant deux espaces à la fin d'une ligne.
+- Vous pouvez définir un paragraphe distinct en le délimitant avec des sauts de ligne.
+
+::: tip
+Vous pouvez insérer deux espaces et un retour à la ligne avec <kbd>⇧ Shift</kbd> + <kbd>Entrée</kbd>.
+:::
 
 ```markdown
 Voici une ligne pour nous de commencer.
@@ -338,12 +341,12 @@ Vous pouvez créer des listes de tâches simples avec des listes de cases à coc
 ```
 
 ::: tip
-Vous pouvez cocher / décocher les cases dans l'aperçu.
+Vous pouvez cocher / décocher les cases à cocher dans l'aperçu.
 :::
 
 ## Frontmatter
 
-Dans QOwnNotes, vous pouvez utiliser un « frontmatter » (par exemple YAML) pour ajouter des méta-informations supplémentaires. Il ne sera **pas affiché dans l'aperçu** et ne perturbera **pas la génération automatique de nom de fichier de note**.
+Dans QOwnNotes, vous pouvez utiliser un « frontmatter » (par exemple YAML) pour ajouter des méta-informations supplémentaires. Cela ne sera **pas affiché dans l'aperçu** et ne perturbera **pas la génération automatique de nom de fichier de note**.
 
 ```markdown
 ---
@@ -356,4 +359,4 @@ description: une description
 Du texte
 ```
 
-Le nom de fichier de cet exemple de note serait `Le titre de la note commence ici.md`.
+Le nom de fichier de cet exemple de note serait `L'en-tête de la note commence ici.md`.

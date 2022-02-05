@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2021 Patrizio Bekerle -- <patrizio@bekerle.com>
+ * Copyright (c) 2014-2022 Patrizio Bekerle -- <patrizio@bekerle.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -152,11 +152,11 @@ void Utils::Misc::openFolderSelect(const QString &absolutePath) {
         openPath(path.left(path.lastIndexOf("/")));
     }
 #elif defined(Q_OS_UNIX) && !defined(Q_OS_MAC)
-    if (QFileInfo(path).exists()) {
+    static const auto fullXdgMimePath = QStandardPaths::findExecutable(QStringLiteral("xdg-mime"));
+    if (!fullXdgMimePath.isEmpty() && QFileInfo(path).exists()) {
         QProcess proc;
         QString output;
-        proc.start(QStringLiteral("xdg-mime"),
-                   QStringList{"query", "default", "inode/directory"});
+        proc.start(fullXdgMimePath, QStringList{"query", "default", "inode/directory"});
         proc.waitForFinished();
         output = proc.readLine().simplified();
         if (output == QStringLiteral("dolphin.desktop") ||
@@ -565,7 +565,16 @@ QString Utils::Misc::portableDataPath() {
     QString path = QString();
 
     if (qApp != Q_NULLPTR) {
-        path = QCoreApplication::applicationDirPath();
+        // for AppImages we best take out the path directly from the first
+        // argument of the executable arguments, because the applicationDirPath
+        // will be some temporary path
+        if (Utils::Misc::isAppImage()) {
+            const QFileInfo fileInfo(qApp->property(
+                             "arguments").toStringList().at(0));
+            path = fileInfo.absolutePath();
+        } else {
+            path = QCoreApplication::applicationDirPath();
+        }
     }
 
     // use a fallback if the QApplication object wasn't instantiated yet
@@ -591,6 +600,15 @@ QString Utils::Misc::portableDataPath() {
  */
 bool Utils::Misc::isInPortableMode() {
     return qApp != nullptr ? qApp->property("portable").toBool() : false;
+}
+
+/**
+ * Returns true if the app is an AppImage
+ *
+ * @return
+ */
+bool Utils::Misc::isAppImage() {
+    return qApp->property("release").toString().contains(QStringLiteral("AppImage"));
 }
 
 /**
@@ -998,9 +1016,11 @@ QByteArray Utils::Misc::downloadUrl(const QUrl &url, bool usePost, QByteArray po
     networkRequest.setHeader(QNetworkRequest::UserAgentHeader,
                              Utils::Misc::friendlyUserAgentString());
 
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+#if QT_VERSION < QT_VERSION_CHECK(5, 9, 0)
     networkRequest.setAttribute(QNetworkRequest::FollowRedirectsAttribute,
                                 true);
+#else
+    networkRequest.setAttribute(QNetworkRequest::RedirectPolicyAttribute, true);
 #endif
 
     QByteArray data;
@@ -1523,11 +1543,7 @@ QString Utils::Misc::htmlspecialchars(QString text) {
  * @param text
  */
 void Utils::Misc::printInfo(const QString &text) {
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 0))
     qInfo() << text;
-#else
-    printf("%s\n", text.toLatin1().data());
-#endif
 }
 
 /**
@@ -1853,6 +1869,9 @@ QString Utils::Misc::generateDebugInformation(bool withGitHubLineBreaks) {
         output += prepareDebugInformationLine(QStringLiteral("username"),
                                               cloudConnection.getUsername(),
                                               withGitHubLineBreaks);
+        output += prepareDebugInformationLine(QStringLiteral("accountId"),
+                                              cloudConnection.getAccountId(),
+                                              withGitHubLineBreaks);
     }
 
     // add script information
@@ -1995,7 +2014,7 @@ QString Utils::Misc::generateDebugInformation(bool withGitHubLineBreaks) {
 bool Utils::Misc::regExpInListMatches(const QString &text,
                                       const QStringList &regExpList) {
     for (const QString &regExp : regExpList) {
-        const QString &trimmed = regExp.trimmed();
+        const QString trimmed = regExp.trimmed();
         if (trimmed.isEmpty()) {
             continue;
         }
@@ -2494,6 +2513,9 @@ QString Utils::Misc::testEvernoteImportText(const QString& data) {
 
     return content.trimmed();
 #endif
+    qWarning() << Q_FUNC_INFO << "not implemented for qt6";
+    Q_UNUSED(data);
+    return {};
 }
 
 /**
@@ -2537,11 +2559,9 @@ QString Utils::Misc::logMsgTypeText(QtMsgType logType) {
         case QtMsgType::QtDebugMsg:
             type = QStringLiteral("Debug");
             break;
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 5, 0))
         case QtMsgType::QtInfoMsg:
             type = QStringLiteral("Info");
             break;
-#endif
         case QtMsgType::QtWarningMsg:
             type = QStringLiteral("Warning");
             break;
@@ -2598,7 +2618,7 @@ int levenshteinDistance(const QString &source, const QString &target)
     for (int i = 0; i < sourceCount; i++) {
         column[0] = i + 1;
         for (int j = 0; j < targetCount; j++) {
-            column[j + 1] = std::min({
+            column[j + 1] = std::min<int>({
                 1 + column.at(j),
                 1 + previousColumn.at(1 + j),
                 previousColumn.at(j) + ((source.at(i) == target.at(j)) ? 0 : 1)

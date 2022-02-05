@@ -15,6 +15,12 @@
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QMimeData>
+
+#ifdef __GNUC__
+    #if __GNUC__ >= 11
+        QT_WARNING_DISABLE_GCC("-Wmismatched-new-delete")
+    #endif
+#endif
 #include <QQmlComponent>
 #include <QQmlContext>
 #include <QQmlEngine>
@@ -46,9 +52,10 @@ ScriptingService::ScriptingService(QObject *parent) : QObject(parent) {
     _engine = new QQmlEngine(this);
     _engine->rootContext()->setContextProperty(QStringLiteral("script"), this);
 #ifndef INTEGRATION_TESTS
-    _engine->rootContext()->setContextProperty(
-        QStringLiteral("mainWindow"),
-        qApp->property("mainWindow").value<MainWindow *>());
+    if (!MainWindow::instance()) {
+        qWarning() << "Unexpected null MainWindow in ScriptingService()";
+    }
+    _engine->rootContext()->setContextProperty(QStringLiteral("mainWindow"), MainWindow::instance());
 #endif
 
     // deprecated
@@ -1250,8 +1257,8 @@ void ScriptingService::noteTextEditSetSelection(int start, int end) {
         QOwnNotesMarkdownTextEdit *textEdit = mainWindow->activeNoteTextEdit();
         QTextCursor c = textEdit->textCursor();
 
-        start = std::max(start, 0);
-        end = std::min(end, textEdit->toPlainText().count());
+        start = std::max<int>(start, 0);
+        end = std::min<int>(end, textEdit->toPlainText().count());
 
         c.setPosition(start);
         c.setPosition(end, QTextCursor::KeepAnchor);
@@ -1278,7 +1285,7 @@ void ScriptingService::noteTextEditSetCursorPosition(int position) {
     MainWindow *mainWindow = MainWindow::instance();
     if (mainWindow != Q_NULLPTR) {
         QOwnNotesMarkdownTextEdit *textEdit = mainWindow->activeNoteTextEdit();
-        position = std::min(position, textEdit->toPlainText().count());
+        position = std::min<int>(position, textEdit->toPlainText().count());
         QTextCursor c = textEdit->textCursor();
 
         if (position < 0) {
@@ -1366,7 +1373,7 @@ QString ScriptingService::noteTextEditCurrentWord(bool withPreviousCharacters) {
 #ifndef INTEGRATION_TESTS
     MainWindow *mainWindow = MainWindow::instance();
     return mainWindow != Q_NULLPTR
-               ? mainWindow->noteTextEditCurrentWord(withPreviousCharacters)
+               ? mainWindow->activeNoteTextEdit()->currentWord(withPreviousCharacters)
                : QString();
 #else
     Q_UNUSED(withPreviousCharacters)

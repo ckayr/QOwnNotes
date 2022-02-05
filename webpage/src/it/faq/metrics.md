@@ -6,9 +6,9 @@ QOwnNotes (l'applicazione) è **sviluppata da una persona, qualche volta due, ne
 
 I rilasci sono preparati per molte piattaforme e distribuzioni (spesso per versioni molto vecchie delle stesse). Mantenerle attive costa un sacco di lavoro.
 
-Le metriche sono l'unica reale sorgente di informazioni a proposito di quali versioni di piattaforme e distribuzioni e quali funzionalità sono usate dagli utenti, quindi si possono prendere decisioni su quali versioni ritirare e quali funzionalità richiedono più lavoro e quali invece sono usate raramente.
+Le metriche sono la sola fonte di informazione attendibile su quali versioni di piattaforme e distribuzioni gira QOwnNotes. Mostrano anche quali funzionalità sono le più popolari, in modo tale che si possano prendere decisioni su quali versioni ritirare, quali funzionalità debbano essere migliorate o quali siano poco usate.
 
-Lo stesso vale per le lingue usate dagli utenti, che guidano le traduzioni dell'applicazione e della documentazione.
+Lo stesso vale per la scelta dei linguaggi dell'utente, che favorisce il miglioramento delle traduzioni corrispondenti.
 
 ## Dove sono salvate le metriche?
 
@@ -28,7 +28,7 @@ In più, sono inviati alcuni eventi al server, per esempio quando certe azioni v
 
 QOwnNotes è un software libero, il cui codice è aperto (free open source software). Puoi vedere le metriche in ogni momento cercando, per esempio [sendVisitIfEnabled](https://github.com/pbek/QOwnNotes/search?q=sendVisitIfEnabled) e [sendEventIfEnabled](https://github.com/pbek/QOwnNotes/search?q=sendEventIfEnabled) nel codice sorgente per vedere cosa esattamente è mandato.
 
-**Nessuna informazione personale, come il testo che inserisci o i nomi delle note, è raccolta!**
+**Non è raccolta alcuna informazione personale, né il testo che inserisci né i nomi delle note!**
 
 ## Posso spegnere le metriche?
 

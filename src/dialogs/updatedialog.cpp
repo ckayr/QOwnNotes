@@ -182,10 +182,13 @@ void UpdateDialog::dialogButtonClicked(QAbstractButton *button) {
             QUrl url(releaseUrl);
             QNetworkRequest networkRequest(url);
 
-#if (QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)) && (QT_VERSION < QT_VERSION_CHECK(6, 0, 0))
+#if (QT_VERSION < QT_VERSION_CHECK(5, 9, 0))
             // we really need redirects for GitHub urls!
             networkRequest.setAttribute(
                 QNetworkRequest::FollowRedirectsAttribute, true);
+#else
+            networkRequest.setAttribute(
+                QNetworkRequest::RedirectPolicyAttribute, true);
 #endif
 
 #if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
@@ -469,9 +472,21 @@ bool UpdateDialog::initializeLinuxUpdateProcess(const QString &filePath) {
     // rename the new AppImage to the path of the current binary
     if (!updateFile.rename(appPath)) {
         QMessageBox::critical(0, tr("File error"),
-          tr("Your old QOwnNotes executable '%1' could not be overwritten be replaced "
+          tr("Your old QOwnNotes executable '%1' could not be replaced "
                 "by the new file '%2'! You need to replace it yourself.")
               .arg(appPath, filePath));
+
+        return false;
+    }
+
+    QFile appFile(appPath);
+
+    // make the new AppImage executable (2nd attempt)
+    if (!appFile.setPermissions(appFile.permissions() | QFileDevice::ExeOwner)) {
+        QMessageBox::critical(0, tr("Permission error"),
+                              tr("The app file '%1' could not be made executable! "
+                                 "You need to make it executable yourself.")
+                                  .arg(appPath));
 
         return false;
     }

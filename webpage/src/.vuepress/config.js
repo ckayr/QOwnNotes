@@ -183,8 +183,10 @@ module.exports = {
         // text for the edit-on-github link
         editLinkText: 'Help us improve this page!',
         // algolia docsearch options for current locale
+        // https://v2.vuepress.vuejs.org/reference/plugin/docsearch.html#options
         algolia: {
-          apiKey: '35f878f4b712d5ab6a659eb0a6c71576',
+          appId: 'LP8PS829KJ',
+          apiKey: '52d0b99615b7586dcd5a360a5cfe3f07',
           indexName: 'qownnotes'
         },
         nav: [
@@ -715,6 +717,12 @@ module.exports = {
         },
         canonical_base: 'https://www.qownnotes.org',
         sort: entries => _.reverse( _.sortBy( entries, 'date' ) ),
+      }
+    ],
+    [
+      'vuepress-plugin-canonical', // https://github.com/IOriens/vuepress-plugin-canonical
+      {
+        baseURL: 'https://www.qownnotes.org' // base url for your canonical link, optional, default: ''
       }
     ],
   ],

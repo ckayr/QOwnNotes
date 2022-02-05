@@ -29,7 +29,6 @@
 #include <QKeySequenceEdit>
 #include <QMenu>
 #include <QMessageBox>
-#include <QProcess>
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
 #include <QSettings>
@@ -41,6 +40,7 @@
 #include <QTimer>
 #include <QJsonDocument>
 #include <utility>
+#include <QPointer>
 
 #include "build_number.h"
 #include "dialogs/websockettokendialog.h"
@@ -965,7 +965,7 @@ void SettingsDialog::storeSettings() {
     settings.setValue(QStringLiteral("webSocketServerService/commandSnippetsTag"),
                       ui->commandSnippetsTagLineEdit->text());
     settings.setValue(
-        QStringLiteral("webSocketServerService/bookmarksNoteName"),
+        QStringLiteral("webSocketServerService/commandSnippetsNoteName"),
         ui->commandSnippetsNoteNameLineEdit->text());
 
     settings.setValue(QStringLiteral("webAppClientService/serverUrl"),
@@ -1053,6 +1053,9 @@ void SettingsDialog::storePanelSettings() {
     // Navigation Panel Options
     settings.setValue(QStringLiteral("navigationPanelHideSearch"),
                       ui->navigationPanelHideSearchCheckBox->isChecked());
+
+    settings.setValue(QStringLiteral("navigationPanelAutoSelect"),
+                      ui->navigationPanelAutoSelectCheckBox->isChecked());
 
     settings.setValue(QStringLiteral("enableNoteTree"),
                       ui->enableNoteTreeCheckBox->isChecked());
@@ -1649,6 +1652,9 @@ void SettingsDialog::readPanelSettings() {
     ui->navigationPanelHideSearchCheckBox->setChecked(
         settings.value(QStringLiteral("navigationPanelHideSearch")).toBool());
 
+    ui->navigationPanelAutoSelectCheckBox->setChecked(
+        settings.value(QStringLiteral("navigationPanelAutoSelect"), true).toBool());
+
     ui->enableNoteTreeCheckBox->setChecked(Utils::Misc::isEnableNoteTree());
 }
 
@@ -1750,7 +1756,7 @@ void SettingsDialog::loadShortcutSettings() {
             // the shortcut disabling button
             auto *frame = new QFrame();
             auto *frameLayout = new QHBoxLayout();
-            frameLayout->setMargin(0);
+            frameLayout->setContentsMargins({});
             frameLayout->setSpacing(2);
             frameLayout->addWidget(keyWidget);
             frameLayout->addWidget(disableShortcutButton);
@@ -3963,10 +3969,15 @@ void SettingsDialog::on_setGitPathToolButton_clicked() {
  * Opens a dialog to search for scripts in the script repository
  */
 void SettingsDialog::searchScriptInRepository(bool checkForUpdates) {
-    auto *dialog = new ScriptRepositoryDialog(this, checkForUpdates);
+    QPointer<ScriptRepositoryDialog> dialog = new ScriptRepositoryDialog(this, checkForUpdates);
     dialog->exec();
+
+    if (!dialog) {
+        return;
+    }
+
     Script lastInstalledScript = dialog->getLastInstalledScript();
-    delete (dialog);
+    delete dialog;
 
     // reload the script list
     reloadScriptList();
@@ -4459,8 +4470,15 @@ void SettingsDialog::on_loginFlowButton_clicked() {
             return;
         }
 
+        QPointer<SettingsDialog> alive(this);
+
         auto postData = QString("token=" + token).toLocal8Bit();
         auto data = Utils::Misc::downloadUrl(pollUrl, true, postData);
+
+        if (!alive) {
+            return;
+        }
+
 
 //        qDebug() << __func__ << " - 'data': " << data;
 
@@ -4476,6 +4494,18 @@ void SettingsDialog::on_loginFlowButton_clicked() {
         ui->serverUrlEdit->setText(jsonObject.value(QStringLiteral("server")).toString());
         ui->userNameEdit->setText(jsonObject.value(QStringLiteral("loginName")).toString());
         ui->passwordEdit->setText(jsonObject.value(QStringLiteral("appPassword")).toString());
+
+        // Try to fetch the account id
+        QString accountId = OwnCloudService::fetchNextcloudAccountId(
+            ui->serverUrlEdit->text(), ui->userNameEdit->text(),
+            ui->passwordEdit->text());
+
+        if (!alive) {
+            return;
+        }
+
+        _selectedCloudConnection.setAccountId(accountId);
+        _selectedCloudConnection.store();
 
         QMessageBox::information(this, QObject::tr("Login flow succeeded"),
                              QObject::tr("Username and password were set successfully!"));

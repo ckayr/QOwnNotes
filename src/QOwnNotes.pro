@@ -25,6 +25,12 @@ CONFIG(DEV_MODE) {
     HEADERS += pch.h
 }
 
+CONFIG(USE_QLITEHTML) {
+    message("QLiteHtml usage enabled")
+    DEFINES += USE_QLITEHTML=1
+    include(libraries/qlitehtml/src/qlitehtml.pri)
+}
+
 TARGET = QOwnNotes
 TEMPLATE = app
 ICON = QOwnNotes.icns
@@ -96,7 +102,7 @@ TRANSLATIONS = languages/QOwnNotes_en.ts \
     languages/QOwnNotes_sq.ts
 
 CODECFORTR = UTF-8
-CONFIG += c++11
+CONFIG += c++17
 
 INCLUDEPATH += $$PWD/libraries $$PWD/libraries/diff_match_patch
 
@@ -189,13 +195,16 @@ SOURCES += main.cpp\
     widgets/notetreewidgetitem.cpp \
     widgets/todoitemtreewidget.cpp \
     widgets/layoutwidget.cpp \
+    widgets/htmlpreviewwidget.cpp \
     dialogs/serverbookmarksimportdialog.cpp \
     dialogs/websockettokendialog.cpp \
     dialogs/imagedialog.cpp \
     dialogs/commandbar.cpp \
     models/commandmodel.cpp \
     libraries/fuzzy/kfuzzymatcher.cpp \
-    libraries/qr-code-generator/QrCode.cpp
+    libraries/qr-code-generator/QrCode.cpp \
+    widgets/notesubfoldertree.cpp \
+    utils/urlhandler.cpp
 
 HEADERS  += mainwindow.h \
     build_number.h \
@@ -293,13 +302,16 @@ HEADERS  += mainwindow.h \
     widgets/notetreewidgetitem.h \
     widgets/todoitemtreewidget.h \
     widgets/layoutwidget.h \
+    widgets/htmlpreviewwidget.h \
     dialogs/serverbookmarksimportdialog.h \
     dialogs/websockettokendialog.h \
     dialogs/imagedialog.h \
     dialogs/commandbar.h \
     models/commandmodel.h \
     libraries/fuzzy/kfuzzymatcher.h \
-    libraries/qr-code-generator/QrCode.hpp
+    libraries/qr-code-generator/QrCode.hpp \
+    widgets/notesubfoldertree.h \
+    utils/urlhandler.h \
 
 FORMS    += mainwindow.ui \
     dialogs/attachmentdialog.ui \
@@ -386,6 +398,16 @@ unix {
 
   icons.path = $$DATADIR/icons/hicolor
   icons.files += images/icons/*
+}
+
+QMAKE_CXXFLAGS += "-Wall -Wextra -Wundef"
+
+# Enable Werror on unixes except mac
+CONFIG(DEV_MODE) {
+    unix:!mac {
+        message("Werror enabled")
+        QMAKE_CXXFLAGS += "-Wno-error=deprecated-declarations -Werror"
+    }
 }
 
 CONFIG(debug, debug|release) {

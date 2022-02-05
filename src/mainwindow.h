@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2021 Patrizio Bekerle -- <patrizio@bekerle.com>
+ * Copyright (c) 2014-2022 Patrizio Bekerle -- <patrizio@bekerle.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,6 +34,7 @@ namespace Ui {
 class MainWindow;
 }
 
+class HtmlPreviewWidget;
 class QMimeData;
 class QActionGroup;
 class QListWidgetItem;
@@ -86,6 +87,7 @@ class MainWindow : public QMainWindow {
    Q_SIGNALS:
     void currentNoteChanged(Note &note);
     void log(LogWidget::LogType logType, QString text);
+    void settingsChanged();
 
    public:
     enum CreateNewNoteOption {
@@ -116,7 +118,16 @@ class MainWindow : public QMainWindow {
 
     void setCurrentNoteText(QString text);
 
-    Note getCurrentNote();
+    void setCurrentNote(Note note, bool updateNoteText = true,
+                        bool updateSelectedNote = true,
+                        bool addPreviousNoteToHistory = true);
+
+    void createNewNote(QString noteName = QString(),
+                       bool withNameAppend = true);
+
+    void doSearchInNote(QString searchText);
+
+    const Note &getCurrentNote();
 
     void createNewNote(
         QString name, QString text,
@@ -177,7 +188,7 @@ class MainWindow : public QMainWindow {
 
     bool jumpToNoteSubFolder(int noteSubFolderId);
 
-    QString noteTextEditCurrentWord(bool withPreviousCharacters = false);
+    void selectNavigationItemAtPosition(int position);
 
     Q_INVOKABLE bool createNewNoteSubFolder(QString folderName = QString());
 
@@ -201,14 +212,20 @@ class MainWindow : public QMainWindow {
 
     Q_INVOKABLE bool insertDataUrlAsFileIntoCurrentNote(const QString &dataUrl);
 
+    class NoteSubFolderTree *noteSubFolderTree();
+
+    void openTodoDialog(const QString &taskUid = QString());
+
+    class QOwnNotesMarkdownTextEdit *noteTextEdit();
+
+    void refreshNotePreview();
+
    protected:
     void changeEvent(QEvent *event) override;
 
     void closeEvent(QCloseEvent *event) override;
 
     bool eventFilter(QObject *obj, QEvent *event) override;
-
-    void resizeEvent(QResizeEvent *event) override;
 
    public slots:
     void setCurrentNoteFromNoteId(const int noteId);
@@ -254,7 +271,7 @@ class MainWindow : public QMainWindow {
 
     void on_action_New_note_triggered();
 
-    void on_noteTextView_anchorClicked(const QUrl &arg1);
+    void onNotePreviewAnchorClicked(const QUrl &arg1);
 
     void on_actionCheck_for_updates_triggered();
 
@@ -275,8 +292,6 @@ class MainWindow : public QMainWindow {
     void on_actionSelect_all_notes_triggered();
 
     void jumpToWelcomeNote();
-
-    void on_noteTextEdit_customContextMenuRequested(const QPoint pos);
 
     void pasteMediaIntoNote();
 
@@ -437,8 +452,6 @@ class MainWindow : public QMainWindow {
 
     void reloadTodoLists();
 
-    void openTodoDialog(const QString &taskUid = QString());
-
     void showWindow();
 
     void on_actionOpen_IRC_Channel_triggered();
@@ -458,26 +471,15 @@ class MainWindow : public QMainWindow {
 
     void on_noteTreeWidget_itemChanged(QTreeWidgetItem *item, int column);
 
-    void on_noteSubFolderTreeWidget_currentItemChanged(
-        QTreeWidgetItem *current, QTreeWidgetItem *previous);
+    void onCurrentSubFolderChanged();
 
-    void on_noteSubFolderTreeWidget_itemSelectionChanged();
+    void onMultipleSubfoldersSelected();
 
     void clearTagFilteringColumn();
 
     void on_noteSubFolderLineEdit_textChanged(const QString &arg1);
 
-    void on_noteSubFolderTreeWidget_itemExpanded(QTreeWidgetItem *item);
-
-    void on_noteSubFolderTreeWidget_itemCollapsed(QTreeWidgetItem *item);
-
-    void on_noteSubFolderTreeWidget_customContextMenuRequested(
-        const QPoint pos);
-
     void on_noteSubFolderLineEdit_returnPressed();
-
-    void on_noteSubFolderTreeWidget_itemChanged(QTreeWidgetItem *item,
-                                                int column);
 
     void on_actionShare_note_triggered();
 
@@ -577,13 +579,7 @@ class MainWindow : public QMainWindow {
 
     void on_actionCheck_for_script_updates_triggered();
 
-    void noteTextEditResize(QResizeEvent *event);
-
-    void encryptedNoteTextEditResize(QResizeEvent *event);
-
     void on_actionShow_local_trash_triggered();
-
-    void on_encryptedNoteTextEdit_customContextMenuRequested(const QPoint pos);
 
     void on_actionJump_to_note_text_edit_triggered();
 
@@ -677,6 +673,34 @@ class MainWindow : public QMainWindow {
 
     void on_actionImport_notes_from_Joplin_triggered();
 
+public:
+    /** Settings access **/
+    static bool isInDistractionFreeMode();
+    void setShowNotesFromAllNoteSubFolders(bool show);
+    bool showNotesFromAllNoteSubFolders() const;
+
+    /** Actions **/
+public:
+    QAction *newNoteAction();
+    QAction *reloadNoteFolderAction();
+    QAction *insertTextLinkAction();
+    QAction *searchTextOnWebAction();
+    QAction *pasteImageAction();
+    QAction *autocompleteAction();
+    QAction *splitNoteAtPosAction();
+    QList<QAction*> customTextEditActions();
+
+public:
+    /** export / print **/
+    void printTextDocument(QTextDocument *textDocument);
+    void exportNoteAsPDF(QTextDocument *doc);
+
+    int getMaxImageWidth() const;
+
+public:
+    void clearNoteDirectoryWatcher();
+    void updateNoteDirectoryWatcher();
+
 private:
     Ui::MainWindow *ui;
     QString notesPath;
@@ -735,6 +759,7 @@ private:
     QDockWidget *_notePreviewDockWidget;
     QDockWidget *_logDockWidget;
     QDockWidget *_scriptingDockWidget;
+    class LogWidget *_logWidget;
     QWidget *_taggingDockTitleBarWidget;
     QWidget *_noteSubFolderDockTitleBarWidget;
     QWidget *_noteSearchDockTitleBarWidget;
@@ -757,7 +782,6 @@ private:
     IssueAssistantDialog *_issueAssistantDialog;
     StoredImagesDialog *_storedImagesDialog;
     StoredAttachmentsDialog *_storedAttachmentsDialog;
-    SettingsDialog *_settingsDialog;
     bool _noteExternallyRemovedCheckEnabled;
     QList<QAction *> _noteTextEditContextMenuActions;
     QList<QAction *> _noteListContextMenuActions;
@@ -770,20 +794,20 @@ private:
     QActionGroup *_languageGroup;
     QActionGroup *_spellBackendGroup;
     bool _brokenTagNoteLinksRemoved = false;
-    const QIcon _tagIcon = QIcon::fromTheme(
-        QStringLiteral("tag"),
-        QIcon(QStringLiteral(":/icons/breeze-qownnotes/16x16/tag.svg")));
-    const QIcon _folderIcon = QIcon::fromTheme(
-        QStringLiteral("folder"),
-        QIcon(QStringLiteral(":icons/breeze-qownnotes/16x16/folder.svg")));
-    const QIcon _noteIcon = QIcon::fromTheme(
-        QStringLiteral("text-x-generic"),
-        QIcon(":icons/breeze-qownnotes/16x16/text-x-generic.svg"));
+
+#ifdef USE_QLITEHTML
+    HtmlPreviewWidget *_notePreviewWidget = nullptr;
+#endif
+
     QList<QHotkey *> _globalShortcuts;
     int _lastNoteId = 0;
     bool _scriptUpdateFound = false;
     bool _isMaximizedBeforeFullScreen = false;
     bool _isMinimizedBeforeFullScreen = false;
+
+    void initTreeWidgets();
+
+    void initNotePreviewAndTextEdits();
 
     void createSystemTrayIcon();
 
@@ -794,10 +818,6 @@ private:
     bool buildNotesIndex(int noteSubFolderId = 0, bool forceRebuild = false);
 
     QString selectOwnCloudNotesFolder();
-
-    void setCurrentNote(Note note, bool updateNoteText = true,
-                        bool updateSelectedNote = true,
-                        bool addPreviousNoteToHistory = true);
 
     void removeCurrentNote();
 
@@ -840,16 +860,6 @@ private:
 
     bool preparePrintNotePrinter(QPrinter *printer);
 
-    void printNote(QPlainTextEdit *textEdit);
-
-    void exportNoteAsPDF(QTextEdit *textEdit);
-
-    void exportNoteAsPDF(QTextDocument *doc);
-
-    void printNote(QTextEdit *textEdit);
-
-    void printTextDocument(QTextDocument *textDocument);
-
     void updateNoteEncryptionUI();
 
     void askForEncryptedNotePasswordIfNeeded(
@@ -875,13 +885,9 @@ private:
 
     bool insertMedia(QFile *file, QString title = QString());
 
-    int currentNoteLineNumber();
-
     static bool isValidMediaFile(QFile *file);
 
     static bool isValidNoteFile(QFile *file);
-
-    static bool isInDistractionFreeMode();
 
     void removeSelectedTags();
 
@@ -891,7 +897,7 @@ private:
 
     void highlightCurrentNoteTagsInTagTree();
 
-    void filterNotesBySearchLineEditText();
+    void filterNotesBySearchLineEditText(bool searchInNote = true);
 
     void filterNotes(bool searchForText = true);
 
@@ -925,8 +931,6 @@ private:
 
     void initScriptingEngine();
 
-    int getMaxImageWidth();
-
     void updateWindowTitle();
 
     void initSavedSearchesCompleter();
@@ -937,21 +941,12 @@ private:
 
     QTreeWidgetItem *firstVisibleNoteTreeWidgetItem();
 
-    QTreeWidgetItem *addNoteSubFolderToTreeWidget(
-        QTreeWidgetItem *parentItem, const NoteSubFolder &noteSubFolder);
-
-    void buildNoteSubFolderTreeForParentItem(QTreeWidgetItem *parent = nullptr);
-
     void setupNoteSubFolders();
 
     void filterNotesByNoteSubFolders();
 
-    void updateNoteDirectoryWatcher();
-
     bool addNoteToNoteTreeWidget(const Note &note,
                                  QTreeWidgetItem *parent = nullptr);
-
-    void removeSelectedNoteSubFolders(QTreeWidget *treeWidget);
 
     QTreeWidgetItem *findNoteInNoteTreeWidget(const Note &note);
 
@@ -972,9 +967,6 @@ private:
 
     void copySelectedNotesToNoteSubFolder(const NoteSubFolder &noteSubFolder);
 
-    void createNewNote(QString noteName = QString(),
-                       bool withNameAppend = true);
-
     void initTagButtonScrollArea();
 
     static QIcon getSystemTrayIcon();
@@ -984,10 +976,6 @@ private:
     void initTreeWidgetItemHeight();
 
     static void updateTreeWidgetItemHeight(QTreeWidget *treeWidget, int height);
-
-    bool solveEquationInNoteTextEdit(double &returnValue);
-
-    bool noteTextEditAutoComplete(QStringList &resultList);
 
     void initDockWidgets();
 
@@ -1013,11 +1001,6 @@ private:
 
     void assignColorToTagItem(QTreeWidgetItem *item);
 
-    static void handleTreeWidgetItemTagColor(QTreeWidgetItem *item,
-                                             const Tag &tag);
-    static void handleTreeWidgetItemTagColor(QTreeWidgetItem *item,
-                                             int tag);
-
     void disableColorOfTagItem(QTreeWidgetItem *item);
 
     void assignColorToSelectedTagItems();
@@ -1036,13 +1019,11 @@ private:
 
     static void startAppVersionTest();
 
-    bool showNotesFromAllNoteSubFolders();
-
     void selectAllNotesInNoteSubFolderTreeWidget() const;
 
     bool insertAttachment(QFile *file, const QString &title = QString());
 
-    static Qt::SortOrder toQtOrder(int order);
+    bool insertTextAsAttachment(const QString &text, const QString &title = QString());
 
     void updatePanelsSortOrder();
 
@@ -1071,11 +1052,6 @@ private:
 
     void applyFormatter(const QString &formatter);
 
-    bool isNoteTextSelected();
-
-    void noteTextEditCustomContextMenuRequested(
-        QOwnNotesMarkdownTextEdit *noteTextEdit, const QPoint pos);
-
     void updateNoteTextEditReadOnly();
 
     int getSelectedNotesCount() const;
@@ -1088,9 +1064,6 @@ private:
     void openNotesContextMenu(const QPoint globalPos,
                               bool multiNoteMenuEntriesOnly = false);
 
-    void openNoteSubFolderContextMenu(const QPoint globalPos,
-                                      QTreeWidget *treeWidget);
-
     void updateCurrentNoteTextHash();
 
     void centerAndResize();
@@ -1098,8 +1071,6 @@ private:
     void forceRegenerateNotePreview();
 
     void removeConflictedNotesDatabaseCopies();
-
-    void doSearchInNote(QString searchText);
 
     void insertNoteText(const QString &text);
 
@@ -1114,9 +1085,7 @@ private:
     void noteTextEditTextWasUpdated();
     void removeNoteFromNoteTreeWidget(Note &note) const;
     void initGlobalKeyboardShortcuts();
-    void clearNoteDirectoryWatcher();
     void resizeTagTreeWidgetColumnToContents() const;
-    void resizeNoteSubFolderTreeWidgetColumnToContents() const;
     void updateCurrentTabData(const Note &note) const;
     bool jumpToTab(const Note &note) const;
     void closeOrphanedTabs() const;

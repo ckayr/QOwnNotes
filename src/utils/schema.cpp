@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2021 Patrizio Bekerle -- <patrizio@bekerle.com>
+ * Copyright (c) 2014-2022 Patrizio Bekerle -- <patrizio@bekerle.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -277,6 +277,11 @@ void Utils::Schema::Settings::setFormatStyle(
     QTextCharFormat& format) const {
     // get the correct font
     QFont font = getFont(index);
+
+    // this fixes issues rendering monospaced fonts bold when they
+    // are set to bold by setFontWeight below
+    // https://github.com/pbek/QOwnNotes/issues/2338
+    font.setStyleName(QString());
 
     // set the font
     format.setFont(font);

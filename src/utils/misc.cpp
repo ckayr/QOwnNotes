@@ -436,8 +436,9 @@ QByteArray Utils::Misc::startSynchronousProcess(const QString &executablePath,
 
     // start executablePath synchronous with parameters
 #ifdef Q_OS_MAC
-    process.start("open", QStringList()
-                  << "-W" << "-a" << executablePath << "--args" << parameters);
+    // process.start("open", QStringList()
+    //               << "-W" << "-a" << executablePath << "--args" << parameters);
+    process.start(executablePath, parameters);
 #else
     process.start(executablePath, parameters);
 #endif
